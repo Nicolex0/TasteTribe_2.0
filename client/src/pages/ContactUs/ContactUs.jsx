@@ -92,6 +92,69 @@ const ContactUs = () => {
               </a>
             </div>
           </div>
+          {/* Contact Form Section */}
+          <div className="w-3/4 mx-auto mt-10">
+            <form onSubmit={handleSubmit} className="space-y-10">
+              {/* Name Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <label className="absolute -top-3.5 left-0 text-black bg-white px-1">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="w-full p-2 border-b-2 border-gray-300 outline-none focus:border-black"
+                    required
+                  />
+                </div>
+                <div className="relative">
+                  <label className="absolute -top-3.5 left-0 text-black bg-white px-1">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="w-full p-2 border-b-2 border-gray-300 outline-none focus:border-black"
+                    required
+                  />
+                </div>
+              </div>
+              {/* Contact Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <label className="absolute -top-3.5 left-0 text-black bg-white px-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full p-2 border-b-2 border-gray-300 outline-none focus:border-black"
+                    required
+                  />
+                </div>
+                <div className="relative">
+                  <label className="absolute -top-3.5 left-0 text-black bg-white px-1">
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    className="w-full p-2 border-b-2 border-gray-300 outline-none focus:border-black"
+                    required
+                  />
+                </div>
+              </div>
+              </form>
+              </div>          
             </div>
             </main>
             </div>
