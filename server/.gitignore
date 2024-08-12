@@ -1,0 +1,12 @@
+.venv
+.env
+__pycache__/
+routes/__pycache__/
+models/__pycache__/
+.dockerignore
+instance
+migrations
+../.venv/
+../.DS_Store
+.DS_Store
+../.DS_Store
