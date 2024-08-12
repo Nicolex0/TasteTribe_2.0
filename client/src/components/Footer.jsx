@@ -19,10 +19,10 @@ const Footer = () => {
               <NavLink to="/" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>HOME</NavLink>
             </li>
             <li>
-              <NavLink to="/recipes" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>RECIPES</NavLink>
+              <NavLink to="/aboutus" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>ABOUT US</NavLink>
             </li>
             <li>
-              <NavLink to="/aboutus" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>ABOUT US</NavLink>
+              <NavLink to="/recipes" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>RECIPES</NavLink>
             </li>
             <li>
               <NavLink to="/contactus" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>CONTACT US</NavLink>

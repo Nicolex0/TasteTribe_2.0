@@ -34,8 +34,8 @@ const NavBar = () => {
           <div className="hidden md:flex space-x-6">
             {[
               { name: "HOME", path: "/" },
-              { name: "RECIPES", path: "/recipes" },
               { name: "ABOUT US", path: "/aboutus" },
+              { name: "RECIPES", path: "/recipes" },
               { name: "CONTACT US", path: "/contactus" }
             ].map((item) => (
               <NavLink
@@ -71,6 +71,9 @@ const NavBar = () => {
                 </div>
               )}
             </div>
+            <NavLink to="/signup" className="bg-white text-customGreen px-4 py-2 rounded-full hover:bg-gray-200 transition duration-300">
+              Sign Up
+            </NavLink>
           </div>
 
           {/* Toggle Menu and Search Icon for mobile */}
@@ -97,6 +100,9 @@ const NavBar = () => {
                 </div>
               )}
             </div>
+            <NavLink to="/signup" className="bg-white text-customGreen px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition duration-300">
+              Sign Up
+            </NavLink>
           </div>
 
           {/* Dropdown Menu for Mobile */}
@@ -104,8 +110,8 @@ const NavBar = () => {
             <div className="absolute top-16 left-0 w-full bg-customGreen md:hidden">
               {[
                 { name: "HOME", path: "/" },
-                { name: "RECIPES", path: "/recipes" },
                 { name: "ABOUT US", path: "/aboutus" },
+                { name: "RECIPES", path: "/recipes" },
                 { name: "CONTACT US", path: "/contactus" }
               ].map((item) => (
                 <NavLink
