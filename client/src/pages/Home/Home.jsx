@@ -6,7 +6,7 @@ const Home = () => {
         <div className="text-center text-white px-4">
           <h1 className="text-5xl font-bold mb-4">IGNITE CULINARY MAGIC</h1>
           <p className="text-lg mb-6">Discover a world of flavours, create your own recipes, and let your home smell like our love of cooking</p>
-          <Link to='/signUp' className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded">Explore Recipes</Link>
+          <Link to='/recipes' className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded">Explore Recipes</Link>
         </div>
       </div>
     </section>
