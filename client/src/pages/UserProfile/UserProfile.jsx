@@ -193,10 +193,27 @@ const UserProfile = () => {
                 </form>
               </div>
             </div>
-
           )}
 
-
+{activeTab === "notifications" && (
+            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-auto">
+              <div className="text-center">
+                <h3 className="text-2xl font-semibold mb-4 text-gray-800">
+                  No Notifications Yet!
+                </h3>
+                <p className="mb-6 text-gray-600">
+                  It looks like you don't have any notifications right now. Why
+                  not explore some new recipes and get inspired?
+                </p>
+                <button
+                  onClick={handleExploreRecipesClick}
+                  className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-950 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                >
+                  Explore Recipes
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
