@@ -21,6 +21,17 @@ const UserRecipes = () => {
     dietType: '',
   });
 
+  const handleEdit = (recipe) => {
+    setEditingRecipe(recipe);
+    setNewRecipe(recipe);
+    setShowForm(true);
+  };
+
+  const handleDelete = (id) => {
+    setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
+  };
+
+
   return (
     <div></div>
   )
