@@ -20,3 +20,32 @@ const SignUp = () => {
   const [emailError, setEmailError] = useState('');
   const [showSuccessAlert, setShowSuccessAlert] = useState(false); // New state for alert visibility
   const [verificationEmailSent, setVerificationEmailSent] = useState(false); // New state for email verification status
+
+  
+    const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const resetForm = () => {
+    setUsername('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+    setError('');
+    setPasswordError('');
+    setEmailError('');
+    setVerificationEmailSent(false);
+  };
+  return (
+    <div></div>
+        
+  )
+}
+
+export default SignUp;
