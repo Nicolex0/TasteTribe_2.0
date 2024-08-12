@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import RecipeCard from '../components/RecipeCard';
+import UserRecipeCard from '../../components/UserRecipeCard';
 
 const UserRecipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -85,7 +85,7 @@ const UserRecipes = () => {
     return () => {
       window.removeEventListener('keydown', handleEsc);
     };
-  }, [])
+  }, []);
 
   return (
     <div className="bg-gradient-to-r from-green-50 to-blue-50 min-h-screen">
@@ -94,7 +94,7 @@ const UserRecipes = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {recipes.map((recipe) => (
             <div key={recipe.id} className="relative transform transition duration-300 hover:scale-105">
-              <RecipeCard recipe={recipe} />
+              <UserRecipeCard recipe={recipe} />
               <div className="absolute bottom-4 left-4 flex space-x-3">
                 <button
                   onClick={() => handleEdit(recipe)}
