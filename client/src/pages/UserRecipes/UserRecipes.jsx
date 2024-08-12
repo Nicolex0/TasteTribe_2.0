@@ -45,10 +45,39 @@ const UserRecipes = () => {
       setRecipes((prevRecipes) => [...prevRecipes, { ...submittedRecipe, id: Date.now() }]);
     }
 
+    setNewRecipe({
+      chefImage: '',
+      title: '',
+      chefName: '',
+      image: '',
+      ingredients: '',
+      instructions: '',
+      url: '',
+      moreInfoUrl: '',
+      rating: 0,
+      prepTime: '',
+      servings: 0,
+      countryOfOrigin: '',
+      dietType: '',
+    });
+    setShowForm(false);
+  };
+
+  const handleEdit = (recipe) => {
+    setEditingRecipe(recipe);
+    setNewRecipe(recipe);
+    setShowForm(true);
+  };
+
+  const handleDelete = (id) => {
+    setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
+  };
+
+
 
   return (
     <div></div>
   )
 }
-}
+
 export default UserRecipes;
