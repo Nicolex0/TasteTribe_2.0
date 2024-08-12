@@ -73,7 +73,19 @@ const UserRecipes = () => {
     setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
   };
 
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.keyCode === 27) {
+        setShowForm(false);
+        setEditingRecipe(null);
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
 
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [])
 
   return (
     <div></div>
