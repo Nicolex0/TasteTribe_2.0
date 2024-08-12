@@ -153,6 +153,69 @@ const ContactUs = () => {
                   />
                 </div>
               </div>
+              {/* Inquiry Type Selection */}
+              <div>
+                <header className="font-semibold">Select Subject?</header>
+                <div className="flex space-x-4 mt-2">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="inquiryType"
+                      value="General Inquiry"
+                      checked={formData.inquiryType === "General Inquiry"}
+                      onChange={handleChange}
+                      className="form-radio"
+                      required
+                    />
+                    <span className="ml-2">General Inquiry</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="inquiryType"
+                      value="Recipe Inquiry"
+                      checked={formData.inquiryType === "Recipe Inquiry"}
+                      onChange={handleChange}
+                      className="form-radio"
+                    />
+                    <span className="ml-2">Recipe Inquiry</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="inquiryType"
+                      value="Ingredients Inquiry"
+                      checked={formData.inquiryType === "Ingredients Inquiry"}
+                      onChange={handleChange}
+                      className="form-radio"
+                    />
+                    <span className="ml-2">Ingredients Inquiry</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="inquiryType"
+                      value="Report"
+                      checked={formData.inquiryType === "Report"}
+                      onChange={handleChange}
+                      className="form-radio"
+                    />
+                    <span className="ml-2">Report</span>
+                  </label>
+                </div>
+              </div>
+              {/* Message Field */}
+              <div>
+                <header className="font-semibold">Message</header>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full p-2 border-b-2 border-gray-300 outline-none focus:border-black"
+                  placeholder="Write your message.."
+                  required
+                ></textarea>
+              </div>
               </form>
               </div>          
             </div>
