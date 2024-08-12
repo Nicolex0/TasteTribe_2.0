@@ -216,6 +216,15 @@ const ContactUs = () => {
                   required
                 ></textarea>
               </div>
+              {/* Submit Button */}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="w-1/3 bg-black text-white p-2 rounded hover:bg-customGreen focus:outline-none"
+                >
+                  Send Message
+                </button>
+              </div>
               </form>
               </div>          
             </div>
