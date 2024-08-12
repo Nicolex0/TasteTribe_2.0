@@ -79,7 +79,19 @@ const ContactUs = () => {
                 <span>Nairobi, Kenya</span>
               </li>
             </ul>
+            {/* Social Media Links */}
+            <div className="flex space-x-4 mt-40">
+              <a href="#" className="text-2xl text-white hover:text-blue-800">
+                <FaFacebookF />
+              </a>
+              <a href="#" className="text-2xl text-white hover:text-blue-300">
+                <FaTwitter />
+              </a>
+              <a href="#" className="text-2xl text-white hover:text-pink-800">
+                <FaInstagram />
+              </a>
             </div>
+          </div>
             </div>
             </main>
             </div>
