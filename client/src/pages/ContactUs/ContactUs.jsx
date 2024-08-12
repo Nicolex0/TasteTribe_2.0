@@ -226,6 +226,8 @@ const ContactUs = () => {
                 </button>
               </div>
               </form>
+              {/* Submission Confirmation Message */}
+            {isSubmitted ? <p>Your message is sent successfully!</p> : null}
               </div>          
             </div>
             </main>
