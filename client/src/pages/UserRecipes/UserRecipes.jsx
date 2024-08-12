@@ -21,20 +21,34 @@ const UserRecipes = () => {
     dietType: '',
   });
 
-  const handleEdit = (recipe) => {
-    setEditingRecipe(recipe);
-    setNewRecipe(recipe);
-    setShowForm(true);
+  const handleInputChange = (e) => {
+    const value = e.target.name === 'rating' ? parseFloat(e.target.value) : e.target.value;
+    setNewRecipe({ ...newRecipe, [e.target.name]: value });
   };
 
-  const handleDelete = (id) => {
-    setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
-  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const submittedRecipe = {
+      ...newRecipe,
+      rating: parseFloat(newRecipe.rating) || 0,
+    };
+
+    if (editingRecipe) {
+      setRecipes((prevRecipes) =>
+        prevRecipes.map((recipe) =>
+          recipe.id === editingRecipe.id ? { ...submittedRecipe, id: recipe.id } : recipe
+        )
+      );
+      setEditingRecipe(null);
+    } else {
+      setRecipes((prevRecipes) => [...prevRecipes, { ...submittedRecipe, id: Date.now() }]);
+    }
 
 
   return (
     <div></div>
   )
 }
-
+}
 export default UserRecipes;
