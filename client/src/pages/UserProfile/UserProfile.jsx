@@ -17,7 +17,7 @@ const UserProfile = () => {
   };
 
   const handleExploreRecipesClick = () => {
-    navigate("/featured-recipes");
+    navigate("/recipes");
   };
 
   return (
@@ -64,7 +64,7 @@ const UserProfile = () => {
               </li>
             </ul>
           </div>
-          
+
           {activeTab === "account" && (
             <div className="flex flex-col md:flex-row md:space-x-8">
               <div className="w-full md:w-1/3 border-r border-gray-200 pr-8 mb-8 md:mb-0">
