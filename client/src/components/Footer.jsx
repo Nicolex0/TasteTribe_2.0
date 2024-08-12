@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-4 w-full">
         {/* Logo */}
         <div className="mb-4 md:mb-0 flex items-center">
-          <img src="https://via.placeholder.com/40" alt="TasteTribe Logo" className="h-8 mr-2" />
+          <img src="https://res.cloudinary.com/dud0jjkln/image/upload/v1723487640/1_fenfqx.jpg" alt="TasteTribe Logo" className="h-8 mr-2" />
           <span className="text-xl font-bold">TasteTribe</span>
         </div>
 
