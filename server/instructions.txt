@@ -2,6 +2,7 @@
 
 rm -rf .venv  #if you don't have a venv, skip this step
 
+cd server
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
