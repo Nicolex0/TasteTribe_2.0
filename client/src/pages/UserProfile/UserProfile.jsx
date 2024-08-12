@@ -1,10 +1,13 @@
-import React from 'react'
-const UserProfile = () => {
-  return (
-    <div>
-      MyProfile
-    </div>
-  )
-}
+import React, { useState } from "react";
 
-export default UserProfile
+import { useNavigate } from "react-router-dom";
+
+const UserProfile = () => {
+  const [file, setFile] = useState(null);
+
+  const [activeTab, setActiveTab] = useState("account");
+  const navigate = useNavigate();
+}
+  return (
+    <div></div>
+  )
