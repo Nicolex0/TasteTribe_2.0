@@ -4,7 +4,7 @@ import { MdOutlineMailOutline } from "react-icons/md";
 import { VscLockSmall } from "react-icons/vsc";
 import { TbEyeClosed } from "react-icons/tb";
 import { RiEyeCloseFill } from "react-icons/ri";
-import { auth } from "../../firebase"; // Import auth from your firebase.js
+import { auth } from "../../../firebase"; // Import auth from your firebase.js
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
