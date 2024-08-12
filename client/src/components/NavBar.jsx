@@ -67,7 +67,7 @@ const NavBar = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                   <NavLink to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</NavLink>
                   <NavLink to="/myrecipes" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Recipes</NavLink>
-                  <NavLink to="/logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</NavLink>
+                  <NavLink to="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</NavLink>
                 </div>
               )}
             </div>
@@ -93,7 +93,7 @@ const NavBar = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                   <NavLink to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</NavLink>
                   <NavLink to="/myrecipes" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Recipes</NavLink>
-                  <NavLink to="/logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</NavLink>
+                  <NavLink to="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</NavLink>
                 </div>
               )}
             </div>
