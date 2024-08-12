@@ -42,6 +42,54 @@ const SignUp = () => {
     setEmailError('');
     setVerificationEmailSent(false);
   };
+  const handleSignUp = async () => {
+    setError('');
+    setPasswordError('');
+    setEmailError('');
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      setPasswordError("Password should be at least 6 characters");
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Send email verification
+      await sendEmailVerification(user);
+
+      // User successfully signed up and verification email sent
+      setShowSuccessAlert(true); // Show success alert
+      setVerificationEmailSent(true); // Indicate email verification sent
+      resetForm(); // Clear form fields
+      console.log("User signed up successfully and verification email sent");
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        setEmailError("The email address is already in use proceed to login");
+      } else {
+        setError(error.message);
+      }
+    }
+  };
+  
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div></div>
         
