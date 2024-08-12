@@ -55,9 +55,39 @@ const ContactUs = () => {
     }
 };
   return (
-    <div>
+    <>
+    <div className="min-h-screen bg-backgroundGreen flex flex-col items-center p-0 font-urbanist">
+      <h1 className="text-4xl font-bold text-center mb-4">Contact Us</h1>
+      <p className="text-center mb-8 font-light">Any question or remarks? Just write us a message!</p>
+      <main className="flex-grow w-full max-w-7xl mx-auto mt-5 mb-2.5 bg-white p-8 shadow-xl">
+        <div className="flex space-x-8">
+          {/* Contact Information Section */}
+          <div className="w-1/2 h-screen bg-customGreen text-white p-8 rounded-xl">
+            <h2 className="text-2xl font-bold mb-4">Contact Information</h2>
+            <p className='mb-4'>Say something to start a live chat!</p>
+            <ul className="mt-40 space-y-10">
+              <li className="flex items-center space-x-2">
+                <FaPhoneAlt className="text-xl text-white" />
+                <span>+1 234 567 890</span>
+              </li>
+              <li className="flex items-center space-x-2">
+                <FaEnvelope className="text-xl text-white" />
+                <span>tastetribe001@gmail.com</span>
+              </li>
+              <li className="flex items-center space-x-2">
+                <FaMapMarkerAlt className="text-xl text-white" />
+                <span>Nairobi, Kenya</span>
+              </li>
+            </ul>
+            </div>
+            </div>
+            </main>
+            </div>
+            
+            
+
       
-    </div>
+    </>
   )
 }
 
