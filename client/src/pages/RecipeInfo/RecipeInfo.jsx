@@ -70,6 +70,21 @@ const RecipeInfo = () => {
               <img src={recipe.image} alt={recipe.title} className="w-full h-80 object-cover transform hover:scale-105 transition-transform duration-300" />
             </div>
 
+            <div className="flex justify-around text-sm text-gray-600 mb-8 bg-gray-100 py-6 rounded-lg shadow-inner">
+              <div className="flex flex-col items-center">
+                <FaClock className="text-2xl mb-2 text-blue-500" />
+                <span className="font-semibold">{recipe.prepTime}</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <FaUtensils className="text-2xl mb-2 text-green-500" />
+                <span className="font-semibold">{recipe.dietType}</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <FaUsers className="text-2xl mb-2 text-purple-500" />
+                <span className="font-semibold">{recipe.servings} Serves</span>
+              </div>
+            </div>
+
             </div>
             </div>
             </div>
