@@ -102,4 +102,37 @@ const RecipeCard = ({recipe}) => {
       </div>
     </div>
   );
+
+  {/* Likes, Ratings, and Bookmark */}
+  <div className="flex items-center justify-between mb-6 bg-green-50 p-3 rounded-lg">
+  <button onClick={toggleLike} className={`flex items-center space-x-2 ${liked ? 'text-red-500' : 'text-gray-500'} hover:text-red-600 transition-colors duration-200`}>
+    <FaHeart className="text-xl" />
+    <span>{liked ? 'Liked' : 'Like'}</span>
+  </button>
+  <div className="flex items-center space-x-1">
+    <div className="flex">
+      {renderStars(recipe.rating)}
+    </div>
+    <span className="font-semibold">{recipe.rating.toFixed(1)}</span>
+    <span className="text-gray-500">({recipe.numberOfRatings} ratings)</span>
+  </div>
+  <button
+    onClick={toggleBookmark}
+    className={`${bookmarked ? 'text-blue-500' : 'text-gray-500'} group relative hover:text-blue-600 transition-colors duration-200`}
+  >
+    <FaBookmark className="text-xl" />
+    <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      {bookmarked ? 'Bookmarked' : 'Bookmark'}
+    </span>
+  </button>
+  <a
+    href={recipe.moreInfoUrl}
+    className="text-gray-500 hover:text-green-600 transition-colors duration-200 group relative"
+  >
+    <FaComment className="text-xl" />
+    <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      Comment
+    </span>
+  </a>
+</div>
 }
