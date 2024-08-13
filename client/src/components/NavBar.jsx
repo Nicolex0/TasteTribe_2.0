@@ -37,11 +37,6 @@ const NavBar = () => {
         <div className="container mx-auto flex justify-between items-center px-4 w-full">
           {/* Logo */}
           <div className="flex items-center">
-            <img
-              src="https://res.cloudinary.com/dud0jjkln/image/upload/v1723487640/1_fenfqx.jpg"
-              alt="TasteTribe Logo"
-              className="h-8 mr-2"
-            />
             <img src="https://res.cloudinary.com/dud0jjkln/image/upload/v1723487640/1_fenfqx.jpg" alt="TasteTribe Logo" className="h-8 mr-2" />
             <span className="text-xl font-bold">TasteTribe</span>
           </div>
