@@ -97,7 +97,27 @@ const ExploreRecipes = () => {
     });
   };
 
-  return <div></div>;
+  return (
+  <div>
+    <div className="bg-green-50 min-h-screen p-8 font-urbanist">
+      <h1 className="text-4xl font-bold text-center mb-12 text-black">Explore Recipes</h1>
+      
+      {/*Set up the Categories */}
+      <div className="flex justify-center space-x-4 mb-12">
+        {dietType.map(dietType => (
+          <button
+            key={dietType}
+            className={`px-6 py-3 ${selectedDietType === dietType ? 'bg-green-600 text-white' : 'bg-white text-green-600'} rounded-full shadow-lg transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50`}
+            onClick={() => setSelectedDietType(dietType)}
+          >
+            {dietType}
+          </button>
+        ))}
+      </div>
+      </div>
+
+
+  </div>);
 };
 
 export default ExploreRecipes;
