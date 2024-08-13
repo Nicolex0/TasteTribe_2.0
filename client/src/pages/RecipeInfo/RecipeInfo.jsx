@@ -109,6 +109,24 @@ const RecipeInfo = () => {
               </ol>
             </div>
 
+            <div className="mb-8 bg-gray-50 p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-semibold text-gray-700 mb-2">Country of Origin</h2>
+              <p className="text-xl text-gray-600 italic">{recipe.countryOfOrigin}</p>
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold text-gray-700 mb-2">Rating</h2>
+              <div className="flex items-center">
+                <span className="text-3xl font-bold text-yellow-500 mr-2">{rating.toFixed(1)}</span>
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar key={star} className={`text-2xl ${star <= Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300'}`} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          
+
             </div>
             </div>
             </div>
