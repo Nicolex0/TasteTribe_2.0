@@ -50,4 +50,24 @@ const RecipeCard = ({recipe}) => {
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
 }
-}
+return (
+    <>
+      {[...Array(fullStars)].map((_, i) => (
+        <FaStar key={`full-${i}`} className="text-yellow-400" />
+      ))}
+      {hasHalfStar && (
+        <div className="relative">
+          <FaStar className="text-gray-300" />
+          <div className="absolute top-0 left-0 overflow-hidden" style={{ width: '50%' }}>
+            <FaStar className="text-yellow-400" />
+          </div>
+        </div>
+      )}
+      {[...Array(emptyStars)].map((_, i) => (
+        <FaStar key={`empty-${i}`} className="text-gray-300" />
+      ))}
+    </>
+  );
+};
+
+
