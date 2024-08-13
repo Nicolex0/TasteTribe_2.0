@@ -12,6 +12,22 @@ const dietType = ['All','Vegan', 'Dash', 'Keto', 'Atkins', 'Pescatarian', 'Glute
  const [searchTerm, setSearchTerm] = useState('');
  const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
 
+ // Declare an URL variable for the db.json file 
+ const URL = 'http://localhost:3001/recipes'
+
+ // Fetch the recipes from the db.json file
+ useEffect(() => {
+   fetch(`${URL}`) 
+     .then(response => {
+       if (!response.ok) {
+         throw new Error('Network response was not ok');
+       }
+       return response.json();
+     })
+     .then(data => setRecipes(data))
+     .catch(error => console.error('Error fetching recipes:', error));
+ }, []);  console.log(recipes);
+
 const ExploreRecipes = () => {
   return (
     <div>
