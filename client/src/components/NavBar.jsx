@@ -42,6 +42,7 @@ const NavBar = () => {
               alt="TasteTribe Logo"
               className="h-8 mr-2"
             />
+            <img src="https://res.cloudinary.com/dud0jjkln/image/upload/v1723487640/1_fenfqx.jpg" alt="TasteTribe Logo" className="h-8 mr-2" />
             <span className="text-xl font-bold">TasteTribe</span>
           </div>
 
