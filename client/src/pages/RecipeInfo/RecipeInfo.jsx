@@ -35,6 +35,14 @@ const RecipeInfo = () => {
     { author: 'Jane Smith', text: 'Delicious! I added some extra herbs and it turned out amazing.' }
   ]);
 
+  const handleRating = (newRating) => {
+    setRating(newRating);
+  };
+
+  const handleBookmark = () => {
+    setIsBookmarked(!isBookmarked);
+  };
+
   return (
     <div>
       RecipeInfo
