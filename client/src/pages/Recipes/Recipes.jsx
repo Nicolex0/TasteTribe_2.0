@@ -1,8 +1,10 @@
 import React from 'react'
+import FeaturedRecipe from '../../components/FeaturedRecipe'
+
 const Recipes = () => {
   return (
     <div>
-      Recipes
+      <FeaturedRecipe/>
     </div>
   )
 }
