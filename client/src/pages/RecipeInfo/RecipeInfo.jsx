@@ -43,6 +43,18 @@ const RecipeInfo = () => {
     setIsBookmarked(!isBookmarked);
   };
 
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handleSubmitComment = (e) => {
+    e.preventDefault();
+    if (comment.trim()) {
+      setComments([...comments, { author: 'You', text: comment }]);
+      setComment('');
+    }
+  };
+
   return (
     <div>
       RecipeInfo
