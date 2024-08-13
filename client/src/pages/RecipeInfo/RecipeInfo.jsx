@@ -85,6 +85,18 @@ const RecipeInfo = () => {
               </div>
             </div>
 
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold text-gray-700 mb-4 border-b-2 border-blue-300 pb-2">Ingredients</h2>
+              <ul className="list-none text-gray-600 space-y-2">
+                {recipe.ingredients.map((ingredient, index) => (
+                  <li key={index} className="text-lg flex items-center">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                    {ingredient}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             </div>
             </div>
             </div>
