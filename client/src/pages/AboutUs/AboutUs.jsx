@@ -3,7 +3,7 @@ import { FaRocket, FaLightbulb, FaGlobe } from 'react-icons/fa';
 
 const AboutUs = () => {
   return (
-    <div className="p-10 font-urbanist bg-gradient-to-b from-backgroundGreen to-green-100">
+    <div className="p-3 font-urbanist bg-gradient-to-b from-backgroundGreen to-green-100">
       <section className="flex flex-col md:flex-row justify-around mb-16 space-y-6 md:space-y-0 md:space-x-4">
         <div className="bg-white p-8 rounded-xl text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 w-full md:w-1/3">
           <FaRocket className="text-5xl text-yellow-500 mb-6 mx-auto animate-bounce" />
