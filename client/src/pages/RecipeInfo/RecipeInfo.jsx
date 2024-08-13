@@ -56,9 +56,25 @@ const RecipeInfo = () => {
   };
 
   return (
-    <div>
-      RecipeInfo
-    </div>
+    <div className="bg-gradient-to-r from-blue-100 to-green-100 min-h-screen py-12">
+      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-2/3 p-8">
+            <div className="text-center mb-8">
+              <img src={recipe.chefImage} alt={recipe.chefName} className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-blue-500 shadow-lg object-cover" />
+              <h1 className="text-4xl font-bold text-gray-800 mb-2 font-serif">{recipe.title}</h1>
+              <p className="text-xl text-gray-600 italic font-light">by {recipe.chefName}</p>
+            </div>
+
+            <div className="mb-8 overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+              <img src={recipe.image} alt={recipe.title} className="w-full h-80 object-cover transform hover:scale-105 transition-transform duration-300" />
+            </div>
+
+            </div>
+            </div>
+            </div>
+            </div>
+    
   )
 }
 
