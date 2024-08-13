@@ -19,14 +19,10 @@ const mockData =
         countryOfOrigin: 'Italy',
         dietType: 'Dessert',
       }
+    
+      
 
-      const dummyData = [mockData, mockData, mockData, mockData, mockData, mockData]
-console.log(dummyData)
-
-const FeaturedRecipes = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const dummyData = [mockData, mockData, mockData, mockData, mockData, mockData]
+const dummyData = [mockData, mockData, mockData, mockData, mockData, mockData]
 console.log(dummyData)
 
 const FeaturedRecipes = () => {
@@ -80,6 +76,4 @@ const FeaturedRecipes = () => {
   );
 };
 
-
 export default FeaturedRecipes;
-}
