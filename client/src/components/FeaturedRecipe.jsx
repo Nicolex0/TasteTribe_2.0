@@ -19,3 +19,67 @@ const mockData =
         countryOfOrigin: 'Italy',
         dietType: 'Dessert',
       }
+
+      const dummyData = [mockData, mockData, mockData, mockData, mockData, mockData]
+console.log(dummyData)
+
+const FeaturedRecipes = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const dummyData = [mockData, mockData, mockData, mockData, mockData, mockData]
+console.log(dummyData)
+
+const FeaturedRecipes = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+      const interval = setInterval(() => {
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.ceil(dummyData.length / 2));
+      }, 5000); // Change slide every 5 seconds
+
+      return () => clearInterval(interval);
+  }, []);
+
+  return (
+      <div className="bg-gradient-to-r from-green-50 to-green-100 min-h-screen p-8 font-urbanist">
+          <h1 className="text-4xl font-bold text-center mb-12 text-green-800 tracking-wide">Featured Recipes</h1>
+
+          <div className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-lg shadow-xl">
+              <div 
+                  className="flex transition-transform duration-500 ease-in-out" 
+                  style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              >
+                  {Array.from({ length: Math.ceil(dummyData.length / 2) }, (_, i) => i * 2).map((startIndex) => (
+                      <div key={startIndex} className="w-full flex-shrink-0 flex">
+                          {dummyData.slice(startIndex, startIndex + 2).map((recipe) => (
+                              <div key={recipe.id} className="w-1/2 px-2">
+                                  <Link to={`/recipes/${recipe.id}`} className="block w-full h-full">
+                                      <FeaturedRecipesCard
+                                          key = {recipe.id}
+                                          recipe = {recipe}
+                                      />
+                                  </Link>
+                              </div>
+                          ))}
+                      </div>
+                  ))}
+              </div>
+              <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
+                  {Array.from({ length: Math.ceil(dummyData.length / 2) }, (_, index) => (
+                      <button
+                          key={index}
+                          className={`w-3 h-3 rounded-full ${
+                              index === currentIndex ? 'bg-green-600' : 'bg-green-300'
+                          }`}
+                          onClick={() => setCurrentIndex(index)}
+                      />
+                  ))}
+              </div>
+          </div>
+      </div>
+  );
+};
+
+
+export default FeaturedRecipes;
+}
