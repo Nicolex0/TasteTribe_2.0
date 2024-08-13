@@ -76,7 +76,7 @@ const LogIn = () => {
 
   return (
     <>
-    <div className="flex min-h-screen items-center justify-center bg-gray-200">
+    <div className="flex min-h-screen font-urbanist items-center justify-center bg-gray-200">
       <div className="bg-gray-100 p-8 rounded-lg max-w-4xl w-full flex flex-col md:flex-row">
         {/* Left Side - Image */}
         <div className="w-full md:w-1/2 hidden md:block">
