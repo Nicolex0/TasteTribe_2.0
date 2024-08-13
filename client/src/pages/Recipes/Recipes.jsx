@@ -7,7 +7,7 @@ const Recipes = () => {
     <div>
       <FeaturedRecipe/>
       <ExploreRecipes />
-    </div>
+     </div>
   )
 }
 

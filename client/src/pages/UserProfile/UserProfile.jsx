@@ -1,12 +1,46 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   const [file, setFile] = useState(null);
-
   const [activeTab, setActiveTab] = useState("account");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [title, setTitle] = useState("");
+  const [email, setEmail] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
+  const [notifications, setNotifications] = useState([]);
+  const [bookmarks, setBookmarks] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch notifications from the server
+    fetchNotifications();
+    // Fetch bookmarks from the server
+    fetchBookmarks();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      // Replace this with your actual API call
+      const response = await fetch("/api/notifications");
+      const data = await response.json();
+      setNotifications(data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  const fetchBookmarks = async () => {
+    try {
+      // Replace this with your actual API call
+      const response = await fetch("/api/bookmarks");
+      const data = await response.json();
+      setBookmarks(data);
+    } catch (error) {
+      console.error("Error fetching bookmarks:", error);
+    }
+  };
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -18,6 +52,29 @@ const UserProfile = () => {
 
   const handleExploreRecipesClick = () => {
     navigate("/recipes");
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case "firstName":
+        setFirstName(value);
+        break;
+      case "lastName":
+        setLastName(value);
+        break;
+      case "title":
+        setTitle(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "aboutMe":
+        setAboutMe(value);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -79,9 +136,9 @@ const UserProfile = () => {
                     className="w-32 h-32 rounded-full border-4 border-green-100 shadow-md"
                   />
                   <h2 className="text-2xl font-bold mt-6 text-gray-800">
-                    User Name
+                    {firstName} {lastName}
                   </h2>
-                  <p className="text-gray-600 font-medium">Title</p>
+                  <p className="text-gray-600 font-medium">{title}</p>
                   <div className="flex space-x-8 mt-6">
                     <div className="text-center">
                       <span className="block text-2xl font-bold text-green-800">
@@ -117,9 +174,7 @@ const UserProfile = () => {
                     onChange={handleFileChange}
                   />
                   <p className="text-gray-600 mt-6 text-center">Soul Society</p>
-                  <p className="text-gray-600 text-center">
-                    I'm a budding Pastry Chef
-                  </p>
+                  <p className="text-gray-600 text-center">{aboutMe}</p>
                 </div>
               </div>
 
@@ -135,6 +190,9 @@ const UserProfile = () => {
                       </label>
                       <input
                         type="text"
+                        name="firstName"
+                        value={firstName}
+                        onChange={handleInputChange}
                         className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
@@ -144,6 +202,9 @@ const UserProfile = () => {
                       </label>
                       <input
                         type="text"
+                        name="lastName"
+                        value={lastName}
+                        onChange={handleInputChange}
                         className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
@@ -153,6 +214,9 @@ const UserProfile = () => {
                       </label>
                       <input
                         type="text"
+                        name="title"
+                        value={title}
+                        onChange={handleInputChange}
                         className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
@@ -162,6 +226,9 @@ const UserProfile = () => {
                       </label>
                       <input
                         type="email"
+                        name="email"
+                        value={email}
+                        onChange={handleInputChange}
                         className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
@@ -170,6 +237,9 @@ const UserProfile = () => {
                         About Me
                       </label>
                       <textarea
+                        name="aboutMe"
+                        value={aboutMe}
+                        onChange={handleInputChange}
                         className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                         rows="4"
                       ></textarea>
@@ -197,41 +267,73 @@ const UserProfile = () => {
 
           {activeTab === "notifications" && (
             <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-auto">
-              <div className="text-center">
-                <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-                  No Notifications Yet!
-                </h3>
-                <p className="mb-6 text-gray-600">
-                  It looks like you don't have any notifications right now. Why
-                  not explore some new recipes and get inspired?
-                </p>
-                <button
-                  onClick={handleExploreRecipesClick}
-                  className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-950 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                >
-                  Explore Recipes
-                </button>
-              </div>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">
+                Notifications
+              </h3>
+              {notifications.length > 0 ? (
+                <ul className="space-y-4">
+                  {notifications.map((notification, index) => (
+                    <li key={index} className="border-b border-gray-200 pb-4">
+                      <p className="text-gray-800">{notification.message}</p>
+                      <p className="text-sm text-gray-500">
+                        {notification.timestamp}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="text-center">
+                  <p className="mb-6 text-gray-600">
+                    It looks like you don't have any notifications right now.
+                    Why not explore some new recipes and get inspired?
+                  </p>
+                  <button
+                    onClick={handleExploreRecipesClick}
+                    className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-950 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                  >
+                    Explore Recipes
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === "bookmarks" && (
             <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-auto">
-              <div className="text-center">
-                <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-                  My Bookmarks
-                </h3>
-                <p className="mb-6 text-gray-600">
-                  You haven't bookmarked any recipes yet. Start exploring and
-                  save your favorite recipes here!
-                </p>
-                <button
-                  onClick={handleExploreRecipesClick}
-                  className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-950 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                >
-                  Discover Recipes
-                </button>
-              </div>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">
+                My Bookmarks
+              </h3>
+              {bookmarks.length > 0 ? (
+                <ul className="space-y-4">
+                  {bookmarks.map((bookmark, index) => (
+                    <li key={index} className="border-b border-gray-200 pb-4">
+                      <h4 className="text-lg font-semibold text-gray-800">
+                        {bookmark.title}
+                      </h4>
+                      <p className="text-gray-600">{bookmark.description}</p>
+                      <a
+                        href={bookmark.url}
+                        className="text-customGreen hover:underline"
+                      >
+                        View Recipe
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="text-center">
+                  <p className="mb-6 text-gray-600">
+                    You haven't bookmarked any recipes yet. Start exploring and
+                    save your favorite recipes here!
+                  </p>
+                  <button
+                    onClick={handleExploreRecipesClick}
+                    className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-950 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                  >
+                    Discover Recipes
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
