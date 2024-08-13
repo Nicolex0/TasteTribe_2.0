@@ -38,7 +38,7 @@ const NavBar = () => {
           {/* Logo */}
           <div className="flex items-center">
             <img
-              src="https://res.cloudinary.com/dud0jjkln/image/upload/v1723487640/1_fenfqx.jp"
+              src="https://res.cloudinary.com/dud0jjkln/image/upload/v1723487640/1_fenfqx.jpg"
               alt="TasteTribe Logo"
               className="h-8 mr-2"
             />
