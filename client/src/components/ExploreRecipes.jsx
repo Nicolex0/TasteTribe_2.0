@@ -46,41 +46,56 @@ const ExploreRecipes = () => {
   }, []);
   console.log(recipes);
 
-    // Filter the recipes based on the selected diet type, country, and search term
-    const filteredRecipes = recipes.filter(recipe => 
-        (recipe.dietType === selectedDietType || selectedDietType === 'All') &&
-    
-        (recipe.countryOfOrigin === selectedCountry || selectedCountry === 'All') &&
-        (recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) || recipe.chefName.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-      const countries = ['All', ...new Set(recipes.map(recipe => recipe.countryOfOrigin))];
-    
-     
-    // Handle the share logic using social media links
-      const shareOnSocialMedia = (platform, recipe) => {
-        const url = encodeURIComponent(window.location.href);
-        const text = encodeURIComponent(`Check out this ${recipe.title} recipe!`);
-        let shareUrl;
-    
-        switch(platform) {
-          case 'facebook':
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-            break;
-          case 'twitter':
-            shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-            break;
-          case 'instagram':
-            shareUrl = `https://instagram.com/pin/create/button/?url=${url}&description=${text}`;
-            break;
-          case 'whatsapp':
-            shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
-            break;
-          default:
-            return;
-        }
-    
-        window.open(shareUrl, '_blank');
-      };
+  // Filter the recipes based on the selected diet type, country, and search term
+  const filteredRecipes = recipes.filter(
+    (recipe) =>
+      (recipe.dietType === selectedDietType || selectedDietType === "All") &&
+      (recipe.countryOfOrigin === selectedCountry ||
+        selectedCountry === "All") &&
+      (recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        recipe.chefName.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+  const countries = [
+    "All",
+    ...new Set(recipes.map((recipe) => recipe.countryOfOrigin)),
+  ];
+
+  // Handle the share logic using social media links
+  const shareOnSocialMedia = (platform, recipe) => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Check out this ${recipe.title} recipe!`);
+    let shareUrl;
+
+    switch (platform) {
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+        break;
+      case "instagram":
+        shareUrl = `https://instagram.com/pin/create/button/?url=${url}&description=${text}`;
+        break;
+      case "whatsapp":
+        shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
+        break;
+      default:
+        return;
+    }
+
+    window.open(shareUrl, "_blank");
+  };
+
+  // Handle the bookmark button click event
+  const toggleBookmark = (recipeId) => {
+    setBookmarkedRecipes((prevBookmarked) => {
+      if (prevBookmarked.includes(recipeId)) {
+        return prevBookmarked.filter((id) => id !== recipeId);
+      } else {
+        return [...prevBookmarked, recipeId];
+      }
+    });
+  };
 
   return <div></div>;
 };
