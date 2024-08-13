@@ -28,6 +28,7 @@ const ExploreRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
+
   // Declare an URL variable for the db.json file
   const URL = "http://localhost:3001/recipes";
 
@@ -54,6 +55,8 @@ const ExploreRecipes = () => {
       (recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         recipe.chefName.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  
   const countries = [
     "All",
     ...new Set(recipes.map((recipe) => recipe.countryOfOrigin)),
