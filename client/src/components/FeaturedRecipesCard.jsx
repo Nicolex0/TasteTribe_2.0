@@ -25,7 +25,7 @@ const RecipeCard = ({ recipe }) => {
   };
 
   const handleCommentClick = () => {
-    window.location.href = recipe.moreInfoUrl;
+    window.location.href = `/recipe-info/${recipe.id}`;
   };
 
   const handleShare = (platform) => {
@@ -137,10 +137,8 @@ const RecipeCard = ({ recipe }) => {
         </p>
 
         <a
-          href={recipe.moreInfoUrl}
+          href={`/recipe-info/${recipe.id}`}
           className="text-green-500 hover:text-green-600 text-xs block mt-2 underline"
-          target="_blank"
-          rel="noopener noreferrer"
         >
           View More Recipe Info
         </a>
@@ -176,7 +174,7 @@ const RecipeCard = ({ recipe }) => {
           </span>
         </button>
         <a
-          href={recipe.moreInfoUrl}
+          href={`/recipe-info/${recipe.id}`}
           className="text-gray-500 hover:text-green-600 transition-colors duration-200 group relative"
         >
           <FaComment className="text-xl" />
