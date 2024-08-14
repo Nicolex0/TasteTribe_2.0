@@ -8,13 +8,13 @@ import UserRecipes from "./pages/UserRecipes/UserRecipes";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import LogIn from "./pages/LogIn/LogIn";
 import SignUp from "./pages/SignUp/SignUp";
-// import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
 
 const routes = [
   {
     path: "/",
     element: <App />,
-    // errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",

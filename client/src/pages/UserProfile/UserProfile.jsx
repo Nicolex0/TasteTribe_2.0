@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   const [file, setFile] = useState(null);
   const [activeTab, setActiveTab] = useState("account");
+  const [isLoading, setIsLoading] = useState(true);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [title, setTitle] = useState("");
@@ -11,14 +13,38 @@ const UserProfile = () => {
   const [aboutMe, setAboutMe] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
+  const [recipes, setRecipes] = useState(0);
+  const [followers, setFollowers] = useState(0);
+  const [following, setFollowing] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch notifications from the server
-    fetchNotifications();
-    // Fetch bookmarks from the server
-    fetchBookmarks();
+    const loadData = async () => {
+      setFirstName(localStorage.getItem("firstName") || "");
+      setLastName(localStorage.getItem("lastName") || "");
+      setTitle(localStorage.getItem("title") || "");
+      setEmail(localStorage.getItem("email") || "");
+      setAboutMe(localStorage.getItem("aboutMe") || "");
+
+      await fetchNotifications();
+      await fetchBookmarks();
+      await fetchUserStats();
+
+      setIsLoading(false);
+    };
+
+    loadData();
   }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem("firstName", firstName);
+      localStorage.setItem("lastName", lastName);
+      localStorage.setItem("title", title);
+      localStorage.setItem("email", email);
+      localStorage.setItem("aboutMe", aboutMe);
+    }
+  }, [firstName, lastName, title, email, aboutMe, isLoading]);
 
   const fetchNotifications = async () => {
     try {
@@ -39,6 +65,19 @@ const UserProfile = () => {
       setBookmarks(data);
     } catch (error) {
       console.error("Error fetching bookmarks:", error);
+    }
+  };
+
+  const fetchUserStats = async () => {
+    try {
+      // Replace this with your actual API call
+      const response = await fetch("/api/user-stats");
+      const data = await response.json();
+      setRecipes(data.recipes);
+      setFollowers(data.followers);
+      setFollowing(data.following);
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
     }
   };
 
@@ -76,6 +115,10 @@ const UserProfile = () => {
         break;
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-green-50 min-h-screen font-urbanist">
@@ -142,19 +185,19 @@ const UserProfile = () => {
                   <div className="flex space-x-8 mt-6">
                     <div className="text-center">
                       <span className="block text-2xl font-bold text-green-800">
-                        21
+                        {recipes}
                       </span>
                       <span className="text-gray-600">Recipes</span>
                     </div>
                     <div className="text-center">
                       <span className="block text-2xl font-bold text-green-800">
-                        238
+                        {followers}
                       </span>
                       <span className="text-gray-600">Followers</span>
                     </div>
                     <div className="text-center">
                       <span className="block text-2xl font-bold text-green-800">
-                        101
+                        {following}
                       </span>
                       <span className="text-gray-600">Following</span>
                     </div>
