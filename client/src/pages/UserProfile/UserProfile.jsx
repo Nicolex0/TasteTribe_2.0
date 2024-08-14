@@ -4,34 +4,43 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   const [file, setFile] = useState(null);
   const [activeTab, setActiveTab] = useState("account");
+  const [isLoading, setIsLoading] = useState(true);
 
-
-
-
-
-  const [firstName, setFirstName] = useState(() => localStorage.getItem("firstName") || "");
-  const [lastName, setLastName] = useState(() => localStorage.getItem("lastName") || "");
-  const [title, setTitle] = useState(() => localStorage.getItem("title") || "");
-  const [email, setEmail] = useState(() => localStorage.getItem("email") || "");
-  const [aboutMe, setAboutMe] = useState(() => localStorage.getItem("aboutMe") || "");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [title, setTitle] = useState("");
+  const [email, setEmail] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch notifications from the server
-    fetchNotifications();
-    // Fetch bookmarks from the server
-    fetchBookmarks();
+    const loadData = async () => {
+      setFirstName(localStorage.getItem("firstName") || "");
+      setLastName(localStorage.getItem("lastName") || "");
+      setTitle(localStorage.getItem("title") || "");
+      setEmail(localStorage.getItem("email") || "");
+      setAboutMe(localStorage.getItem("aboutMe") || "");
+
+      await fetchNotifications();
+      await fetchBookmarks();
+
+      setIsLoading(false);
+    };
+
+    loadData();
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("firstName", firstName);
-    localStorage.setItem("lastName", lastName);
-    localStorage.setItem("title", title);
-    localStorage.setItem("email", email);
-    localStorage.setItem("aboutMe", aboutMe);
-  }, [firstName, lastName, title, email, aboutMe]);
+    if (!isLoading) {
+      localStorage.setItem("firstName", firstName);
+      localStorage.setItem("lastName", lastName);
+      localStorage.setItem("title", title);
+      localStorage.setItem("email", email);
+      localStorage.setItem("aboutMe", aboutMe);
+    }
+  }, [firstName, lastName, title, email, aboutMe, isLoading]);
 
   const fetchNotifications = async () => {
     try {
@@ -89,6 +98,10 @@ const UserProfile = () => {
         break;
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-green-50 min-h-screen font-urbanist">
