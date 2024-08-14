@@ -4,11 +4,16 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   const [file, setFile] = useState(null);
   const [activeTab, setActiveTab] = useState("account");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [title, setTitle] = useState("");
-  const [email, setEmail] = useState("");
-  const [aboutMe, setAboutMe] = useState("");
+
+
+
+
+
+  const [firstName, setFirstName] = useState(() => localStorage.getItem("firstName") || "");
+  const [lastName, setLastName] = useState(() => localStorage.getItem("lastName") || "");
+  const [title, setTitle] = useState(() => localStorage.getItem("title") || "");
+  const [email, setEmail] = useState(() => localStorage.getItem("email") || "");
+  const [aboutMe, setAboutMe] = useState(() => localStorage.getItem("aboutMe") || "");
   const [notifications, setNotifications] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
   const navigate = useNavigate();
@@ -19,6 +24,14 @@ const UserProfile = () => {
     // Fetch bookmarks from the server
     fetchBookmarks();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("firstName", firstName);
+    localStorage.setItem("lastName", lastName);
+    localStorage.setItem("title", title);
+    localStorage.setItem("email", email);
+    localStorage.setItem("aboutMe", aboutMe);
+  }, [firstName, lastName, title, email, aboutMe]);
 
   const fetchNotifications = async () => {
     try {
