@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
 import { FaBars, FaUser, FaSignInAlt, FaCaretDown } from "react-icons/fa";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -27,6 +30,13 @@ const NavBar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isProfileDropdownOpen]);
+
+  const handleLogout = () => {
+    setIsProfileDropdownOpen(false);
+    setIsLoggedIn(false);
+    navigate('/');
+  };
+
 
   return (
     <div className="w-full sticky top-0 z-50">
@@ -76,36 +86,54 @@ const NavBar = () => {
               </button>
               {isProfileDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                  <NavLink
-                    to="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                  >
-                    My Profile
-                  </NavLink>
-                  <NavLink
-                    to="/myrecipes"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                  >
-                    My Recipes
-                  </NavLink>
-                  <NavLink
-                    to="/login"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                  >
-                    Log Out
-                  </NavLink>
+
+                  {isLoggedIn ? (
+                    <>
+                      <NavLink
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      >
+                        My Profile
+                      </NavLink>
+                      <NavLink
+                        to="/myrecipes"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      >
+                        My Recipes
+                      </NavLink>
+                      <button
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={handleLogout}
+                      >
+                        Log Out
+                      </button>
+                    </>
+                  ) : (
+                    <NavLink
+                      to="/login"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        setIsProfileDropdownOpen(false);
+                        setIsLoggedIn(true);
+                      }}
+                    >
+                      Log In
+                    </NavLink>
+                  )}
                 </div>
               )}
             </div>
-            <NavLink
-              to="/signup"
-              className="bg-white text-customGreen px-4 py-2 rounded-full hover:bg-gray-200 transition duration-300"
-            >
-              Sign Up
-            </NavLink>
+            {!isLoggedIn && (
+              <NavLink
+                to="/signup"
+                className="bg-white text-customGreen px-4 py-2 rounded-full hover:bg-gray-200 transition duration-300"
+              >
+                Sign Up
+              </NavLink>
+            )}
+
           </div>
 
           {/* Toggle Menu and Search Icon for mobile */}
@@ -123,36 +151,54 @@ const NavBar = () => {
               </button>
               {isProfileDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                  <NavLink
-                    to="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                  >
-                    My Profile
-                  </NavLink>
-                  <NavLink
-                    to="/myrecipes"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                  >
-                    My Recipes
-                  </NavLink>
-                  <NavLink
-                    to="/login"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                  >
-                    Log Out
-                  </NavLink>
+
+                  {isLoggedIn ? (
+                    <>
+                      <NavLink
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      >
+                        My Profile
+                      </NavLink>
+                      <NavLink
+                        to="/myrecipes"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      >
+                        My Recipes
+                      </NavLink>
+                      <button
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={handleLogout}
+                      >
+                        Log Out
+                      </button>
+                    </>
+                  ) : (
+                    <NavLink
+                      to="/login"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        setIsProfileDropdownOpen(false);
+                        setIsLoggedIn(true);
+                      }}
+                    >
+                      Log In
+                    </NavLink>
+                  )}
                 </div>
               )}
             </div>
-            <NavLink
-              to="/signup"
-              className="bg-white text-customGreen px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition duration-300"
-            >
-              Sign Up
-            </NavLink>
+            {!isLoggedIn && (
+              <NavLink
+                to="/signup"
+                className="bg-white text-customGreen px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition duration-300"
+              >
+                Sign Up
+              </NavLink>
+            )}
+
           </div>
 
           {/* Dropdown Menu for Mobile */}
