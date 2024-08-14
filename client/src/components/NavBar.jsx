@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+
 import { FaBars, FaUser, FaSignInAlt, FaCaretDown } from "react-icons/fa";
 
 const NavBar = () => {
@@ -35,6 +36,7 @@ const NavBar = () => {
     setIsLoggedIn(false);
     navigate('/');
   };
+
 
   return (
     <div className="w-full sticky top-0 z-50">
@@ -84,6 +86,7 @@ const NavBar = () => {
               </button>
               {isProfileDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+
                   {isLoggedIn ? (
                     <>
                       <NavLink
@@ -130,6 +133,7 @@ const NavBar = () => {
                 Sign Up
               </NavLink>
             )}
+
           </div>
 
           {/* Toggle Menu and Search Icon for mobile */}
@@ -147,6 +151,7 @@ const NavBar = () => {
               </button>
               {isProfileDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+
                   {isLoggedIn ? (
                     <>
                       <NavLink
@@ -193,6 +198,7 @@ const NavBar = () => {
                 Sign Up
               </NavLink>
             )}
+
           </div>
 
           {/* Dropdown Menu for Mobile */}

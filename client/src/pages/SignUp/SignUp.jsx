@@ -134,7 +134,7 @@ const SignUp = () => {
   );
 
   return (
-    <div className="flex min-h-screen items-center  justify-center bg-gray-200 relative">
+    <div className="flex min-h-screen items-center font-urbanist justify-center bg-gray-200 relative">
       {showSuccessAlert && <SuccessAlert />} {/* Render the success alert */}
       <div className="bg-gray-100 p-8 rounded-lg max-w-4xl w-full flex flex-col md:flex-row">
         <div className="md:w-1/2 p-6">
