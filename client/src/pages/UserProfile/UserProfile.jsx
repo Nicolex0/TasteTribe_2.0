@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   const [file, setFile] = useState(null);
   const [activeTab, setActiveTab] = useState("account");
+  const [isLoading, setIsLoading] = useState(true);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [title, setTitle] = useState("");
@@ -14,11 +16,31 @@ const UserProfile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch notifications from the server
-    fetchNotifications();
-    // Fetch bookmarks from the server
-    fetchBookmarks();
+    const loadData = async () => {
+      setFirstName(localStorage.getItem("firstName") || "");
+      setLastName(localStorage.getItem("lastName") || "");
+      setTitle(localStorage.getItem("title") || "");
+      setEmail(localStorage.getItem("email") || "");
+      setAboutMe(localStorage.getItem("aboutMe") || "");
+
+      await fetchNotifications();
+      await fetchBookmarks();
+
+      setIsLoading(false);
+    };
+
+    loadData();
   }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem("firstName", firstName);
+      localStorage.setItem("lastName", lastName);
+      localStorage.setItem("title", title);
+      localStorage.setItem("email", email);
+      localStorage.setItem("aboutMe", aboutMe);
+    }
+  }, [firstName, lastName, title, email, aboutMe, isLoading]);
 
   const fetchNotifications = async () => {
     try {
@@ -76,6 +98,10 @@ const UserProfile = () => {
         break;
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-green-50 min-h-screen font-urbanist">
