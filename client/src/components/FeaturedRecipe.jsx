@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import FeaturedRecipesCard from '../components/FeaturedRecipesCard';
 
-// Define the API endpoint for fetching recipes
-const API_URL = 'http://localhost:3001/desserts'; // Adjust URL if needed
+// Define the API endpoint for fetching dessert recipes
+const API_URL = 'http://localhost:3001/recipes?dietType=Dessert';
 
 const FeaturedRecipes = () => {
   const [recipes, setRecipes] = useState([]);
