@@ -33,7 +33,7 @@ const routes = [
         element: <Recipes />,
       },
       {
-        path: "/recipeinfo",
+        path: "/recipes/:recipeId",
         element: <RecipeInfo />,
       },
       {

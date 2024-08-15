@@ -35,22 +35,14 @@ const UserRecipes = () => {
     };
 
     if (editingRecipe) {
-
-
-
-
-      const updatedRecipes = recipes.map((recipe) =>
-        recipe.id === editingRecipe.id ? { ...submittedRecipe, id: recipe.id } : recipe
+      setRecipes((prevRecipes) =>
+        prevRecipes.map((recipe) =>
+          recipe.id === editingRecipe.id ? { ...submittedRecipe, id: recipe.id } : recipe
+        )
       );
-      setRecipes(updatedRecipes);
-      localStorage.setItem('userRecipes', JSON.stringify(updatedRecipes));
       setEditingRecipe(null);
     } else {
-
-      const newRecipeWithId = { ...submittedRecipe, id: Date.now() };
-      const updatedRecipes = [...recipes, newRecipeWithId];
-      setRecipes(updatedRecipes);
-      localStorage.setItem('userRecipes', JSON.stringify(updatedRecipes));
+      setRecipes((prevRecipes) => [...prevRecipes, { ...submittedRecipe, id: Date.now() }]);
     }
 
     setNewRecipe({
@@ -78,16 +70,10 @@ const UserRecipes = () => {
   };
 
   const handleDelete = (id) => {
-
-    const updatedRecipes = recipes.filter((recipe) => recipe.id !== id);
-    setRecipes(updatedRecipes);
-    localStorage.setItem('userRecipes', JSON.stringify(updatedRecipes));
+    setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
   };
 
   useEffect(() => {
-    const savedRecipes = JSON.parse(localStorage.getItem('userRecipes')) || [];
-    setRecipes(savedRecipes);
-
     const handleEsc = (event) => {
       if (event.keyCode === 27) {
         setShowForm(false);
