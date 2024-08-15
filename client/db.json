@@ -431,54 +431,6 @@
       "servings": 8,
       "countryOfOrigin": "France",
       "dietType": "Dessert"
-    },
-    {
-      "id": "de68",
-      "chefImage": "https://img.freepik.com/free-photo/young-african-american-woman-isolated-yellow-studio-background-facial-expression-beautiful-female-close-up-portrait-concept-human-emotions-facial-expression-smiling-keeping-calm_155003-25193.jpg?t=st=1723163379~exp=1723166979~hmac=eb8050034805c34763f392d47e5458b872844231636ae21810f4e327c1250260&w=360",
-      "title": "githeri",
-      "chefName": "Nicole",
-      "image": "https://www.kenyageographic.com/wp-content/uploads/2022/12/spiced-githeri-2.jpg",
-      "ingredients": "beans",
-      "instructions": "boil",
-      "url": "http://example.com",
-      "moreInfoUrl": "http://example.com",
-      "rating": 2.5,
-      "prepTime": "30 mins",
-      "servings": "10",
-      "countryOfOrigin": "Kenya",
-      "dietType": "vegeterian"
-    },
-    {
-      "id": "db54",
-      "chefImage": "https://img.freepik.com/free-photo/young-african-american-woman-isolated-yellow-studio-background-facial-expression-beautiful-female-close-up-portrait-concept-human-emotions-facial-expression-smiling-keeping-calm_155003-25193.jpg?t=st=1723163379~exp=1723166979~hmac=eb8050034805c34763f392d47e5458b872844231636ae21810f4e327c1250260&w=360",
-      "title": "Sandwich",
-      "chefName": "Nicole",
-      "image": "https://img.freepik.com/free-photo/sandwich-chicken_74190-736.jpg?t=st=1722942263~exp=1722945863~hmac=84af23992e27ab3e7d2ba2be154622b7a5f6e1780318f1dc6d9fd766c8cdf0ad&w=740",
-      "ingredients": "Bread\nMayo",
-      "instructions": "Spread some mayo on the bread",
-      "url": "http://example.com",
-      "moreInfoUrl": "http://example.com",
-      "rating": 2.5,
-      "prepTime": "15 mins",
-      "servings": "3",
-      "countryOfOrigin": "Kenya",
-      "dietType": "Meat lovers"
-    },
-    {
-      "id": "1dcd",
-      "chefImage": "https://img.freepik.com/free-photo/young-african-american-woman-isolated-yellow-studio-background-facial-expression-beautiful-female-close-up-portrait-concept-human-emotions-facial-expression-smiling-keeping-calm_155003-25193.jpg?t=st=1723163379~exp=1723166979~hmac=eb8050034805c34763f392d47e5458b872844231636ae21810f4e327c1250260&w=360",
-      "title": "Mshikaki",
-      "chefName": "Nicole",
-      "image": "https://img.freepik.com/free-photo/street-food-still-life_23-2151535150.jpg?semt=ais_hybrid",
-      "ingredients": "Meat",
-      "instructions": "Grill the meat",
-      "url": "http://example.com",
-      "moreInfoUrl": "http://example.com",
-      "rating": 1.7,
-      "prepTime": "30 mins",
-      "servings": "8",
-      "countryOfOrigin": "Kenya",
-      "dietType": "Meat lovers"
     }
   ]
 }
