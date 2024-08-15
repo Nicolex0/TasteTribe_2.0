@@ -7,7 +7,6 @@ import {
   FaStar,
   FaBookmark,
 } from "react-icons/fa";
-import recipeData from '/db.json';
 
 const RecipeInfo = () => {
   const { recipeId } = useParams();
