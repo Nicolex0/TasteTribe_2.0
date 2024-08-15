@@ -26,7 +26,8 @@ const UserRecipes = () => {
     setNewRecipe({ ...newRecipe, [e.target.name]: value });
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const submittedRecipe = {
@@ -42,7 +43,26 @@ const UserRecipes = () => {
       );
       setEditingRecipe(null);
     } else {
-      setRecipes((prevRecipes) => [...prevRecipes, { ...submittedRecipe, id: Date.now() }]);
+
+      try {
+        const response = await fetch('http://localhost:3001/recipes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(submittedRecipe),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add recipe');
+        }
+
+        const addedRecipe = await response.json();
+        setRecipes((prevRecipes) => [...prevRecipes, addedRecipe]);
+      } catch (error) {
+        console.error('Error adding recipe:', error);
+        // Handle error (e.g., show error message to user)
+      }
     }
 
     setNewRecipe({
