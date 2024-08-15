@@ -137,7 +137,7 @@ const RecipeCard = ({ recipe }) => {
         </p>
 
         <a
-          href={`/recipe-info/${recipe.id}`}
+          href={`/recipeinfo/${recipe.id}`}
           className="text-green-500 hover:text-green-600 text-xs block mt-2 underline"
         >
           View More Recipe Info

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   FaClock,
   FaUtensils,
@@ -6,30 +7,11 @@ import {
   FaStar,
   FaBookmark,
 } from "react-icons/fa";
-
-const recipe = {
-  chefImage:
-    "https://img.freepik.com/free-photo/young-african-american-woman-isolated-yellow-studio-background-facial-expression-beautiful-female-close-up-portrait-concept-human-emotions-facial-expression-smiling-keeping-calm_155003-25193.jpg?t=st=1723163379~exp=1723166979~hmac=eb8050034805c34763f392d47e5458b872844231636ae21810f4e327c1250260&w=360",
-  title: "Delicious Pasta Recipe",
-  chefName: "Wanane Nane",
-  image:
-    "https://img.freepik.com/premium-photo/bowl-pasta-with-bowl-tomato-sauce-basil_1246444-1166.jpg?w=740",
-  ingredients: ["Pasta", "Tomato Sauce", "Cheese", "Herbs"],
-  instructions: [
-    "Cook pasta according to package instructions.",
-    "Heat tomato sauce in a separate pan.",
-    "Drain pasta and add it to the sauce.",
-    "Mix well and let it simmer for 2-3 minutes.",
-    "Serve hot, sprinkled with cheese and garnished with fresh herbs.",
-  ],
-  url: "https://example.com/recipe",
-  prepTime: "30 minutes",
-  servings: 4,
-  countryOfOrigin: "Italy",
-  dietType: "Vegetarian",
-};
+import recipeData from '/db.json';
 
 const RecipeInfo = () => {
+  const { recipeId } = useParams();
+  const [recipe, setRecipe] = useState(null);
   const [rating, setRating] = useState(4.5);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [comment, setComment] = useState("");
@@ -43,6 +25,21 @@ const RecipeInfo = () => {
       text: "Delicious! I added some extra herbs and it turned out amazing.",
     },
   ]);
+
+  useEffect(() => {
+    // Fetch the recipe data based on the recipeId
+    const fetchRecipe = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/recipes/${recipeId}`);
+        const data = await response.json();
+        setRecipe(data);
+      } catch (error) {
+        console.error("Error fetching recipe:", error);
+      }
+    };
+
+    fetchRecipe();
+  }, [recipeId]);
 
   const handleRating = (newRating) => {
     setRating(newRating);
@@ -63,6 +60,10 @@ const RecipeInfo = () => {
       setComment("");
     }
   };
+
+  if (!recipe) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-gradient-to-r from-blue-100 to-green-100 min-h-screen py-12">
@@ -102,7 +103,9 @@ const RecipeInfo = () => {
               </div>
               <div className="flex flex-col items-center">
                 <FaUsers className="text-2xl mb-2 text-purple-500" />
-                <span className="font-semibold">{recipe.servings} Serves</span>
+                <span className="font-semibold">
+                  {recipe.number_of_people_served} Serves
+                </span>
               </div>
             </div>
 
@@ -111,12 +114,13 @@ const RecipeInfo = () => {
                 Ingredients
               </h2>
               <ul className="list-none text-gray-600 space-y-2">
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index} className="text-lg flex items-center">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                    {ingredient}
-                  </li>
-                ))}
+                {typeof recipe.ingredients === "object" &&
+                  Object.entries(recipe.ingredients).map(([key, value]) => (
+                    <li key={key} className="text-lg flex items-center">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                      {value}
+                    </li>
+                  ))}
               </ul>
             </div>
 
@@ -125,14 +129,15 @@ const RecipeInfo = () => {
                 Instructions
               </h2>
               <ol className="list-none text-gray-600 space-y-4">
-                {recipe.instructions.map((instruction, index) => (
-                  <li key={index} className="text-lg flex items-start">
-                    <span className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
-                      {index + 1}
-                    </span>
-                    {instruction}
-                  </li>
-                ))}
+                {recipe.instructions && Array.isArray(recipe.instructions) &&
+                  recipe.instructions.map((instruction, index) => (
+                    <li key={index} className="text-lg flex items-start">
+                      <span className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
+                        {index + 1}
+                      </span>
+                      {instruction}
+                    </li>
+                  ))}
               </ol>
             </div>
 
@@ -140,9 +145,7 @@ const RecipeInfo = () => {
               <h2 className="text-2xl font-semibold text-gray-700 mb-2">
                 Country of Origin
               </h2>
-              <p className="text-xl text-gray-600 italic">
-                {recipe.countryOfOrigin}
-              </p>
+              <p className="text-xl text-gray-600 italic">{recipe.country}</p>
             </div>
 
             <div className="mb-8">
