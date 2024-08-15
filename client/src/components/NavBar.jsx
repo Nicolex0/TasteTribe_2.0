@@ -31,12 +31,25 @@ const NavBar = () => {
     };
   }, [isProfileDropdownOpen]);
 
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
   const handleLogout = () => {
     setIsProfileDropdownOpen(false);
     setIsLoggedIn(false);
+    localStorage.removeItem('token');
     navigate('/');
   };
-
 
   return (
     <div className="w-full sticky top-0 z-50">
@@ -117,6 +130,7 @@ const NavBar = () => {
                       onClick={() => {
                         setIsProfileDropdownOpen(false);
                         setIsLoggedIn(true);
+                        localStorage.setItem('token', 'some_token_value');
                       }}
                     >
                       Log In
@@ -182,6 +196,7 @@ const NavBar = () => {
                       onClick={() => {
                         setIsProfileDropdownOpen(false);
                         setIsLoggedIn(true);
+                        localStorage.setItem('token', 'some_token_value');
                       }}
                     >
                       Log In
