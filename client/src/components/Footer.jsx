@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-4 w-full">
         {/* Logo */}
         <div className="mb-4 md:mb-0 flex items-center">
-          <img src="https://via.placeholder.com/40" alt="TasteTribe Logo" className="h-8 mr-2" />
+          <img src="https://res.cloudinary.com/dud0jjkln/image/upload/v1723487640/1_fenfqx.jpg" alt="TasteTribe Logo" className="h-8 mr-2" />
           <span className="text-xl font-bold">TasteTribe</span>
         </div>
 
@@ -19,10 +19,10 @@ const Footer = () => {
               <NavLink to="/" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>HOME</NavLink>
             </li>
             <li>
-              <NavLink to="/recipes" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>RECIPES</NavLink>
+              <NavLink to="/aboutus" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>ABOUT US</NavLink>
             </li>
             <li>
-              <NavLink to="/aboutus" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>ABOUT US</NavLink>
+              <NavLink to="/recipes" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>RECIPES</NavLink>
             </li>
             <li>
               <NavLink to="/contactus" className={({ isActive }) => isActive ? "text-gray-400" : "hover:text-gray-400"}>CONTACT US</NavLink>

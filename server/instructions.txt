@@ -1,0 +1,14 @@
+# READ THIS FIRST AND THEN RUN THE APP
+
+rm -rf .venv  #if you don't have a venv, skip this step
+
+cd server
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# RUN THE APP NOW:
+
+export FLASK_APP=run.py
+export FLASK_DEBUG=1
+flask run --host=localhost --port=8000
