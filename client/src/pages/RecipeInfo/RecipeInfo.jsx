@@ -29,7 +29,9 @@ const RecipeInfo = () => {
     // Fetch the recipe data based on the recipeId
     const fetchRecipe = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/recipes/${recipeId}`);
+        const response = await fetch(
+          `http://localhost:3001/recipes/${recipeId}`
+        );
         const data = await response.json();
         setRecipe(data);
       } catch (error) {
@@ -112,39 +114,27 @@ const RecipeInfo = () => {
               <h2 className="text-2xl font-semibold text-gray-700 mb-4 border-b-2 border-blue-300 pb-2">
                 Ingredients
               </h2>
-              <ul className="list-none text-gray-600 space-y-2">
-                {typeof recipe.ingredients === "object" &&
-                  Object.entries(recipe.ingredients).map(([key, value]) => (
-                    <li key={key} className="text-lg flex items-center">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                      {value}
-                    </li>
-                  ))}
-              </ul>
+              <p className="text-gray-600 text-lg whitespace-pre-line">
+                {recipe.ingredients}
+              </p>
             </div>
 
             <div className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-700 mb-4 border-b-2 border-green-300 pb-2">
                 Instructions
               </h2>
-              <ol className="list-none text-gray-600 space-y-4">
-                {recipe.instructions && Array.isArray(recipe.instructions) &&
-                  recipe.instructions.map((instruction, index) => (
-                    <li key={index} className="text-lg flex items-start">
-                      <span className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
-                        {index + 1}
-                      </span>
-                      {instruction}
-                    </li>
-                  ))}
-              </ol>
+              <p className="text-gray-600 text-lg whitespace-pre-line">
+                {recipe.instructions}
+              </p>
             </div>
 
             <div className="mb-8 bg-gray-50 p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-semibold text-gray-700 mb-2">
                 Country of Origin
               </h2>
-              <p className="text-xl text-gray-600 italic">{recipe.country}</p>
+              <p className="text-xl text-gray-600 italic">
+                {recipe.countryOfOrigin || "Not specified"}
+              </p>
             </div>
 
             <div className="mb-8">
