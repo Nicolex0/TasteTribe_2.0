@@ -1,7 +1,7 @@
 import React from "react";
-
 import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const RecipeCard = ({ recipe, shareOnSocialMedia }) => {
   const handleShare = (platform) => {
@@ -70,9 +70,12 @@ const RecipeCard = ({ recipe, shareOnSocialMedia }) => {
           <span className="text-yellow-500">★ {recipe.rating}</span>
           <span className="text-green-600">{recipe.countryOfOrigin}</span>
         </div>
-        <button className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+        <Link
+          to={`/recipes/${recipe.id}`}
+          className="mt-4 block w-full text-center bg-green-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+        >
           View Recipe
-        </button>
+        </Link>
         <div className="mt-4 flex justify-end space-x-4">
           <FaFacebook
             className="text-blue-600 cursor-pointer text-xl hover:text-blue-800 transition-colors duration-300"
