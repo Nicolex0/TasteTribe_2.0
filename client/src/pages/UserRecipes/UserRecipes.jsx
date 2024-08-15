@@ -21,12 +21,29 @@ const UserRecipes = () => {
     dietType: '',
   });
 
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  const fetchRecipes = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/recipes');
+      if (!response.ok) {
+        throw new Error('Failed to fetch recipes');
+      }
+      const data = await response.json();
+      setRecipes(data);
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    }
+  };
+
   const handleInputChange = (e) => {
     const value = e.target.name === 'rating' ? parseFloat(e.target.value) : e.target.value;
     setNewRecipe({ ...newRecipe, [e.target.name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const submittedRecipe = {
@@ -35,14 +52,48 @@ const UserRecipes = () => {
     };
 
     if (editingRecipe) {
-      setRecipes((prevRecipes) =>
-        prevRecipes.map((recipe) =>
-          recipe.id === editingRecipe.id ? { ...submittedRecipe, id: recipe.id } : recipe
-        )
-      );
-      setEditingRecipe(null);
+      try {
+        const response = await fetch(`http://localhost:3001/recipes/${editingRecipe.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(submittedRecipe),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update recipe');
+        }
+
+        const updatedRecipe = await response.json();
+        setRecipes((prevRecipes) =>
+          prevRecipes.map((recipe) =>
+            recipe.id === editingRecipe.id ? updatedRecipe : recipe
+          )
+        );
+        setEditingRecipe(null);
+      } catch (error) {
+        console.error('Error updating recipe:', error);
+      }
     } else {
-      setRecipes((prevRecipes) => [...prevRecipes, { ...submittedRecipe, id: Date.now() }]);
+      try {
+        const response = await fetch('http://localhost:3001/recipes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(submittedRecipe),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add recipe');
+        }
+
+        const addedRecipe = await response.json();
+        setRecipes((prevRecipes) => [...prevRecipes, addedRecipe]);
+      } catch (error) {
+        console.error('Error adding recipe:', error);
+      }
     }
 
     setNewRecipe({
@@ -69,8 +120,20 @@ const UserRecipes = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/recipes/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete recipe');
+      }
+
+      setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
+    } catch (error) {
+      console.error('Error deleting recipe:', error);
+    }
   };
 
   useEffect(() => {
