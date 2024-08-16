@@ -9,6 +9,7 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import LogIn from "./pages/LogIn/LogIn";
 import SignUp from "./pages/SignUp/SignUp";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import APIDocs from "./APIdocs";
 
 const routes = [
   {
@@ -51,6 +52,10 @@ const routes = [
       {
         path: "/signup",
         element: <SignUp />,
+      },
+         {
+        path: "/APIdocs",
+        element: <APIDocs />,
       },
     ],
   },
