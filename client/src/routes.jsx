@@ -41,7 +41,7 @@ const routes = [
         element: <UserRecipes />,
       },
       {
-        path: "/profile",
+        path: "/profile/:id",
         element: <UserProfile />,
       },
       {

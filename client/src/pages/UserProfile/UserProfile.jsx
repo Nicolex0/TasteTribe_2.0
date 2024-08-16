@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 
 const UserProfile = () => {
+  const params = useParams();
+  console.log(params.id)
+  const users = useOutletContext();
+
+  const user = users.find(user => user.id === params.id);
+  console.log(user)
+  
   const [file, setFile] = useState(null);
   const [activeTab, setActiveTab] = useState("account");
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +57,7 @@ const UserProfile = () => {
   const fetchNotifications = async () => {
     try {
       // Replace this with your actual API call
-      const response = await fetch("/api/notifications");
+      const response = await fetch("https://tastetribe-server.onrender.com/notifications");
       const data = await response.json();
       setNotifications(data);
     } catch (error) {
@@ -60,7 +68,7 @@ const UserProfile = () => {
   const fetchBookmarks = async () => {
     try {
       // Replace this with your actual API call
-      const response = await fetch("/api/bookmarks");
+      const response = await fetch("https://tastetribe-server.onrender.com/bookmarks");
       const data = await response.json();
       setBookmarks(data);
     } catch (error) {
@@ -71,7 +79,7 @@ const UserProfile = () => {
   const fetchUserStats = async () => {
     try {
       // Replace this with your actual API call
-      const response = await fetch("/api/user-stats");
+      const response = await fetch("https://tastetribe-server.onrender.com/user-stats");
       const data = await response.json();
       setRecipes(data.recipes);
       setFollowers(data.followers);

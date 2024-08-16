@@ -42,7 +42,7 @@ const LogIn = () => {
 
       // User is signed in and email is verified
       resetForm(); // Clear form fields and reset states
-      navigate('/recipes'); // Redirect to a dashboard or homepage after login
+      navigate(`/profile/${user.id}`); // Redirect to a dashboard or homepage after login
     } catch (error) {
       if (error.code === 'auth/invalid-credential') {
         setError("Invalid credentials. Please try again. If you have forgotten your password, you can reset it.");

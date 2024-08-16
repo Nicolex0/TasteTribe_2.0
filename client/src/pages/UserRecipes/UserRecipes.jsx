@@ -27,7 +27,7 @@ const UserRecipes = () => {
 
   const fetchRecipes = async () => {
     try {
-      const response = await fetch('http://localhost:3001/recipes');
+      const response = await fetch('https://tastetribe-server.onrender.com/recipes');
       if (!response.ok) {
         throw new Error('Failed to fetch recipes');
       }
@@ -53,7 +53,7 @@ const UserRecipes = () => {
 
     if (editingRecipe) {
       try {
-        const response = await fetch(`http://localhost:3001/recipes/${editingRecipe.id}`, {
+        const response = await fetch(`https://tastetribe-server.onrender.com/recipes/${editingRecipe.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const UserRecipes = () => {
       }
     } else {
       try {
-        const response = await fetch('http://localhost:3001/recipes', {
+        const response = await fetch('https://tastetribe-server.onrender.com/recipes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const UserRecipes = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/recipes/${id}`, {
+      const response = await fetch(`https://tastetribe-server.onrender.com/recipes/${id}`, {
         method: 'DELETE',
       });
 
