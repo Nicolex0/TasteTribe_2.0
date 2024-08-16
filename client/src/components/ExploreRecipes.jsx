@@ -32,7 +32,7 @@ const ExploreRecipes = () => {
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
 
   // Declare an URL variable for the db.json file
-  const URL = "http://localhost:3001/recipes";
+  const URL = "https://tastetribe-server.onrender.com/recipes";
 
   // Fetch the recipes from the db.json file
   useEffect(() => {

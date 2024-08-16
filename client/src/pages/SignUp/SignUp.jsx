@@ -73,7 +73,7 @@ const SignUp = () => {
       await sendEmailVerification(user);
 
       // Create user profile in the server
-      const response = await fetch('http://localhost:3001/users', {
+      const response = await fetch('https://tastetribe-server.onrender.com/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

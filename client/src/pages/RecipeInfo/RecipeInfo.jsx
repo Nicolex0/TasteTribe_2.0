@@ -30,7 +30,7 @@ const RecipeInfo = () => {
     const fetchRecipe = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/recipes/${recipeId}`
+          `https://tastetribe-server.onrender.com/recipes/${recipeId}`
         );
         const data = await response.json();
         setRecipe(data);
