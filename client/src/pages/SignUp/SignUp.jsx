@@ -9,7 +9,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth"; // Import Firebase methods
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +23,7 @@ const SignUp = () => {
   const [emailError, setEmailError] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false); // New state for alert visibility
   const [verificationEmailSent, setVerificationEmailSent] = useState(false); // New state for email verification status
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -71,11 +72,36 @@ const SignUp = () => {
       // Send email verification
       await sendEmailVerification(user);
 
+      // Create user profile in the server
+      const response = await fetch('http://localhost:3001/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          username: username,
+          password: password,
+          
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create user profile');
+      }
+
       // User successfully signed up and verification email sent
       setShowSuccessAlert(true); // Show success alert
       setVerificationEmailSent(true); // Indicate email verification sent
       resetForm(); // Clear form fields
       console.log("User signed up successfully and verification email sent");
+      
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         setEmailError("The email address is already in use proceed to login");
@@ -107,8 +133,8 @@ const SignUp = () => {
             <span className="text-green-600 font-semibold">Success</span>
             <p className="text-green-600 mt-1">
               {verificationEmailSent
-                ? "Account has been created successfully. Please check your email to verify your account."
-                : "Account has been created successfully."}
+                ? "Account has been created successfully. Please check your email to verify your account. Redirecting to login page..."
+                : "Account has been created successfully. Redirecting to login page..."}
             </p>
           </div>
         </div>
@@ -281,5 +307,6 @@ const SignUp = () => {
     </div>
   );
 };
+
 
 export default SignUp;
