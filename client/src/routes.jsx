@@ -9,7 +9,7 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import LogIn from "./pages/LogIn/LogIn";
 import SignUp from "./pages/SignUp/SignUp";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
-import APIDocs from "./APIdocs";
+import APIdocs from "./APIdocs";
 
 const routes = [
   {
