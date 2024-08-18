@@ -55,7 +55,7 @@ const routes = [
       },
          {
         path: "/APIdocs",
-        element: <APIDocs />,
+        element: <APIdocs />,
       },
     ],
   },
