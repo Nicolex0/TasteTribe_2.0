@@ -1,6 +1,6 @@
 import React from 'react';
 
-const APIDocumentation = () => {
+const APIDocs = () => {
   const apiRoutes = [
     {
       title: "Users",
@@ -66,4 +66,4 @@ const APIDocumentation = () => {
   );
 };
 
-export default APIDocumentation;
+export default APIDocs;
