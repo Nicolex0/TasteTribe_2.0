@@ -4,12 +4,8 @@ import { MdOutlineMailOutline } from "react-icons/md";
 import { VscLockSmall } from "react-icons/vsc";
 import { TbEyeClosed } from "react-icons/tb";
 import { RiEyeCloseFill } from "react-icons/ri";
-import { auth } from "../../../firebase"; // Import auth from your firebase.js
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth"; // Import Firebase methods
 import { Link, useNavigate } from "react-router-dom";
+import api from '../../api';
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,11 +14,11 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [error, setError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false); // New state for alert visibility
-  const [verificationEmailSent, setVerificationEmailSent] = useState(false); // New state for email verification status
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -38,75 +34,54 @@ const SignUp = () => {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
+    setFirstName("");
     setShowPassword(false);
     setShowConfirmPassword(false);
     setError("");
     setPasswordError("");
     setEmailError("");
-    setVerificationEmailSent(false);
   };
 
   const handleSignUp = async () => {
     setError("");
     setPasswordError("");
     setEmailError("");
-
+  
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-
+  
     if (password.length < 6) {
       setPasswordError("Password should be at least 6 characters");
       return;
     }
-
+  
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Send email verification
-      await sendEmailVerification(user);
-
-      // Create user profile in the server
-      const response = await fetch('https://tastetribe-server.onrender.com/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          uid: user.uid,
-          email: user.email,
-          username: username,
-          password: password,
-          
-        }),
+      const response = await api.post('/api/auth/signup', { 
+        email, 
+        password, 
+        confirmPassword, 
+        username, 
+        firstName 
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create user profile');
+  
+      if (response.status === 201) {
+        setShowSuccessAlert(true);
+        resetForm();
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
       }
-
-      // User successfully signed up and verification email sent
-      setShowSuccessAlert(true); // Show success alert
-      setVerificationEmailSent(true); // Indicate email verification sent
-      resetForm(); // Clear form fields
-      console.log("User signed up successfully and verification email sent");
-      
-      // Redirect to login page after a short delay
-      setTimeout(() => {
-        navigate('/login');
-      }, 3000);
     } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        setEmailError("The email address is already in use proceed to login");
+      if (error.response && error.response.data) {
+        if (error.response.data.message.includes("Email already registered")) {
+          setEmailError("The email address is already in use. Please proceed to login.");
+        } else {
+          setError(error.response.data.message);
+        }
       } else {
-        setError(error.message);
+        setError("An error occurred during sign up. Please try again.");
       }
     }
   };
@@ -132,9 +107,7 @@ const SignUp = () => {
           <div className="self-center ml-3">
             <span className="text-green-600 font-semibold">Success</span>
             <p className="text-green-600 mt-1">
-              {verificationEmailSent
-                ? "Account has been created successfully. Please check your email to verify your account. Redirecting to login page..."
-                : "Account has been created successfully. Redirecting to login page..."}
+              Account has been created successfully. Please check your email to verify your account.
             </p>
           </div>
         </div>
@@ -161,7 +134,7 @@ const SignUp = () => {
 
   return (
     <div className="flex min-h-screen items-center font-urbanist justify-center bg-gray-200 relative">
-      {showSuccessAlert && <SuccessAlert />} {/* Render the success alert */}
+      {showSuccessAlert && <SuccessAlert />}
       <div className="bg-gray-100 p-8 rounded-lg max-w-4xl w-full flex flex-col md:flex-row">
         <div className="md:w-1/2 p-6">
           <h2 className="text-4xl font-semibold text-green-800 text-center mb-24">
@@ -290,11 +263,16 @@ const SignUp = () => {
             </button>
           </form>
           <p className="mt-4 font-semibold text-center">
-            Already have an account?{" "}
-            <Link to="/login" className="text-green-800">
-              Sign in
-            </Link>
-          </p>
+      Already have an account?{" "}
+      <Link to="/login" className="text-green-800">
+        Sign in
+      </Link>
+    </p>
+    <p className="mt-2 font-semibold text-center">
+      <Link to="/" className="text-green-800">
+        Back to Homepage
+      </Link>
+    </p>
         </div>
         <div className="w-full md:w-1/2 hidden md:block">
           <img
@@ -307,6 +285,5 @@ const SignUp = () => {
     </div>
   );
 };
-
 
 export default SignUp;

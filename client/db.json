@@ -1,27 +1,8 @@
 {
   "users": [
-    {
-      "id": "2384",
-      "uid": "KV73SJLQtTWGan8q7kaSjL2rKe23",
-      "email": "githaigadng@gmail.com",
-      "username": "yokozuna",
-      "password": "1234567"
-    },
-    {
-      "id": "904a",
-      "uid": "JWKOEuxiemclUZu8OIwxKkmg5dg1",
-      "email": "dennis.githaiga@student.moringaschool.com",
-      "username": "Kamau",
-      "password": "987654321"
-    },
-    {
-      "id": "ed1e",
-      "uid": "7fkFeSOd0jgxbH0pREX2p5FAlDH3",
-      "email": "njagigithaiga@gmail.com",
-      "username": "Mike",
-      "password": "654321"
-    }
+    
   ],
+  
   "recipes": [
     {
       "id": 1,

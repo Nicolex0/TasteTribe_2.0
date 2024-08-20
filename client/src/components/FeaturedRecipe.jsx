@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import FeaturedRecipesCard from '../components/FeaturedRecipesCard';
+import api from '../api';
 
 // Define the API endpoint for fetching dessert recipes
-const API_URL = 'https://tastetribe-server.onrender.com/recipes?dietType=Dessert';
+//const API_URL = 'http://127.0.0.1:5000/recipes?dietType=Dessert';
 
 const FeaturedRecipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -14,12 +15,12 @@ const FeaturedRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setRecipes(data);
+        const response = await api.get('/api/recipes');
+        // if (!response.ok) {
+        //   throw new Error('Network response was not ok');
+        // }
+        // const data = await response.json();
+        setRecipes(response.data);
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -28,7 +29,7 @@ const FeaturedRecipes = () => {
     };
 
     fetchRecipes();
-  }, []);
+  }, [recipes]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -37,6 +38,7 @@ const FeaturedRecipes = () => {
 
     return () => clearInterval(interval);
   }, [recipes]);
+  
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import UserRecipeCard from '../../components/UserRecipeCard';
+import api from '../../api';
 
 const UserRecipes = () => {
   const [recipes, setRecipes] = useState([]);
+  const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [newRecipe, setNewRecipe] = useState({
@@ -23,18 +25,24 @@ const UserRecipes = () => {
 
   useEffect(() => {
     fetchRecipes();
+    fetchBookmarkedRecipes();
   }, []);
 
   const fetchRecipes = async () => {
     try {
-      const response = await fetch('https://tastetribe-server.onrender.com/recipes');
-      if (!response.ok) {
-        throw new Error('Failed to fetch recipes');
-      }
-      const data = await response.json();
-      setRecipes(data);
+      const response = await api.get('/api/recipes/user');
+      setRecipes(response.data);
     } catch (error) {
       console.error('Error fetching recipes:', error);
+    }
+  };
+
+  const fetchBookmarkedRecipes = async () => {
+    try {
+      const response = await api.get('/api/recipes/bookmarked');
+      setBookmarkedRecipes(response.data);
+    } catch (error) {
+      console.error('Error fetching bookmarked recipes:', error);
     }
   };
 
@@ -51,67 +59,39 @@ const UserRecipes = () => {
       rating: parseFloat(newRecipe.rating) || 0,
     };
 
-    if (editingRecipe) {
-      try {
-        const response = await fetch(`https://tastetribe-server.onrender.com/recipes/${editingRecipe.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(submittedRecipe),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to update recipe');
-        }
-
-        const updatedRecipe = await response.json();
+    try {
+      if (editingRecipe) {
+        const response = await api.put(`/api/recipes/${editingRecipe.id}`, submittedRecipe);
         setRecipes((prevRecipes) =>
           prevRecipes.map((recipe) =>
-            recipe.id === editingRecipe.id ? updatedRecipe : recipe
+            recipe.id === editingRecipe.id ? response.data : recipe
           )
         );
         setEditingRecipe(null);
-      } catch (error) {
-        console.error('Error updating recipe:', error);
+      } else {
+        const response = await api.post('/api/recipes', submittedRecipe);
+        setRecipes((prevRecipes) => [...prevRecipes, response.data]);
       }
-    } else {
-      try {
-        const response = await fetch('https://tastetribe-server.onrender.com/recipes', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(submittedRecipe),
-        });
 
-        if (!response.ok) {
-          throw new Error('Failed to add recipe');
-        }
-
-        const addedRecipe = await response.json();
-        setRecipes((prevRecipes) => [...prevRecipes, addedRecipe]);
-      } catch (error) {
-        console.error('Error adding recipe:', error);
-      }
+      setNewRecipe({
+        chefImage: '',
+        title: '',
+        chefName: '',
+        image: '',
+        ingredients: '',
+        instructions: '',
+        url: '',
+        moreInfoUrl: '',
+        rating: 0,
+        prepTime: '',
+        servings: 0,
+        countryOfOrigin: '',
+        dietType: '',
+      });
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error submitting recipe:', error);
     }
-
-    setNewRecipe({
-      chefImage: '',
-      title: '',
-      chefName: '',
-      image: '',
-      ingredients: '',
-      instructions: '',
-      url: '',
-      moreInfoUrl: '',
-      rating: 0,
-      prepTime: '',
-      servings: 0,
-      countryOfOrigin: '',
-      dietType: '',
-    });
-    setShowForm(false);
   };
 
   const handleEdit = (recipe) => {
@@ -122,14 +102,7 @@ const UserRecipes = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://tastetribe-server.onrender.com/recipes/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete recipe');
-      }
-
+      await api.delete(`/api/recipes/${id}`);
       setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
     } catch (error) {
       console.error('Error deleting recipe:', error);
@@ -182,6 +155,16 @@ const UserRecipes = () => {
             </div>
           ))}
         </div>
+
+        <h2 className="text-4xl font-extrabold mt-12 mb-8 text-[#33665A] text-center tracking-wide">Bookmarked Recipes</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {bookmarkedRecipes.map((recipe) => (
+            <div key={recipe.id} className="relative transform transition duration-300 hover:scale-105">
+              <UserRecipeCard recipe={recipe} />
+            </div>
+          ))}
+        </div>
+
         <button
           onClick={() => {
             setEditingRecipe(null);
