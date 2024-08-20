@@ -1,3 +1,5 @@
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import App from "./App";
 import Home from "./pages/Home/Home";
 import AboutUs from "./pages/AboutUs/AboutUs";
@@ -9,7 +11,18 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import LogIn from "./pages/LogIn/LogIn";
 import SignUp from "./pages/SignUp/SignUp";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
-import APIdocs from "./APIdocs";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminSignIn from "./pages/Admin/AdminSignIn";
+
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('token') !== null;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
+
+const AdminRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('adminToken') !== null;
+  return isAuthenticated ? children : <Navigate to="/admin/signin" replace />;
+};
 
 const routes = [
   {
@@ -22,30 +35,6 @@ const routes = [
         element: <Home />,
       },
       {
-        path: "/aboutus",
-        element: <AboutUs />,
-      },
-      {
-        path: "/contactus",
-        element: <ContactUs />,
-      },
-      {
-        path: "/recipes",
-        element: <Recipes />,
-      },
-      {
-        path: "/recipes/:recipeId",
-        element: <RecipeInfo />,
-      },
-      {
-        path: "/myrecipes",
-        element: <UserRecipes />,
-      },
-      {
-        path: "/profile",
-        element: <UserProfile />,
-      },
-      {
         path: "/login",
         element: <LogIn />,
       },
@@ -53,10 +42,60 @@ const routes = [
         path: "/signup",
         element: <SignUp />,
       },
-         {
-        path: "/APIdocs",
-        element: <APIdocs />,
+      // New public routes
+      {
+        path: "/aboutus",
+        element: <AboutUs />,
       },
+      {
+        path: "/contactus",
+        element: <ContactUs />,
+      },
+      
+      // Protected routes
+      {
+        element: <ProtectedRoute><Outlet /></ProtectedRoute>,
+        children: [
+          {
+            path: "/recipes/:recipeId",
+            element: <RecipeInfo />,
+          },
+          {
+            path: "/recipes",
+            element: <Recipes />,
+          },
+          {
+            path: "/myrecipes",
+            element: <UserRecipes />,
+          },
+          {
+            path: "/profile",
+            element: <UserProfile />,
+          },
+        ],
+      },
+      {
+        path: "/admin",
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/admin/signin" replace />,
+          },
+          {
+            path: "signin",
+            element: <AdminSignIn />,
+          },
+          {
+            element: <AdminRoute><Outlet /></AdminRoute>,
+            children: [
+              {
+                path: "dashboard",
+                element: <AdminDashboard />,
+              },
+            ],
+          },
+        ],
+      },         
     ],
   },
 ];
