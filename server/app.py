@@ -1,34 +1,59 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from models import db
 from config import Config
-
-db = SQLAlchemy()
-migrate = Migrate()
-jwt = JWTManager()
+from flask_cors import cross_origin
 
 
-def create_app(config_class=Config):
-    app = Flask(__name__)
-    app.config.from_object(config_class)
+# Import your blueprints
+from routes.auth import auth, BLACKLIST
+from routes.users import users
+from routes.recipes import recipes
+from routes.bookmarks import bookmarks
+from routes.likes import likes
+from routes.ratings import ratings
+from routes.notifications import notifications
+from routes.comments import comments
+from routes.contact import contact
+from routes.admin import admin
 
-    db.init_app(app)
-    migrate.init_app(app, db)
-    jwt.init_app(app)
-    CORS(app)
+app = Flask(__name__)
+app.config.from_object(Config)
 
-    from routes import register_blueprints
+# Initialize extensions
+db.init_app(app)
+migrate = Migrate(app, db)
+bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
 
-    register_blueprints(app)
+# Enable CORS
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
-    @app.route("/")
-    def home():
-        return "Welcome to the Flask API! The Backend Works!", 200
+# Register blueprints
+app.register_blueprint(auth, url_prefix='/api/auth')
+app.register_blueprint(users, url_prefix='/api/users')
+app.register_blueprint(recipes, url_prefix='/api/recipes')
+app.register_blueprint(bookmarks, url_prefix='/api/bookmarks')
+app.register_blueprint(likes, url_prefix='/api/likes')
+app.register_blueprint(ratings, url_prefix='/api/ratings')
+app.register_blueprint(notifications, url_prefix='/api/notifications')
+app.register_blueprint(comments, url_prefix='/api/comments')
+app.register_blueprint(contact, url_prefix='/api/contact')
+app.register_blueprint(admin, url_prefix='/api/admin')
 
-    @app.route("/health")
-    def health_check():
-        return "OK", 200
 
-    return app
+# JWT token blacklist check
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]
+    return jti in BLACKLIST
+
+@app.route("/")
+def index():
+    return "Welcome to the Taste-Tribe API"
+
+if __name__ == "__main__":
+    app.run(debug=True)
