@@ -6,6 +6,7 @@ from flask_cors import CORS
 from models import db
 from config import Config
 from flask_cors import cross_origin
+import os
 
 
 # Import your blueprints
@@ -30,7 +31,7 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 # Enable CORS
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": "https://taste-tribe-2-0-rbje.vercel.app/"}})
 
 # Register blueprints
 app.register_blueprint(auth, url_prefix='/api/auth')
@@ -56,4 +57,4 @@ def index():
     return "Welcome to the Taste-Tribe API"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
