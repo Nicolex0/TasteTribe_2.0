@@ -29,7 +29,7 @@ const FeaturedRecipes = () => {
     };
 
     fetchRecipes();
-  }, [recipes]);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
