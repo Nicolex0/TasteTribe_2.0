@@ -1,36 +1,61 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, Profile, db
+from models import db, User
+from schema.schema import UserSchema
 
-bp = Blueprint("users", __name__, url_prefix="/users")
+users = Blueprint('users', __name__)
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
-
-@bp.route("", methods=["GET"])
-def get_users():
-    users = User.query.all()
-    return jsonify([user.to_dict() for user in users])
-
-
-@bp.route("/<int:user_id>", methods=["GET"])
-def get_user(user_id):
-    user = User.query.get_or_404(user_id)
-    return jsonify(user.to_dict())
-
-
-@bp.route("/<int:user_id>/profile", methods=["PUT"])
-@jwt_required()
-def update_profile(user_id):
-    current_user = get_jwt_identity()
-    if current_user != user_id:
-        return jsonify({"msg": "Unauthorized"}), 403
-
+@users.route("", methods=["POST"])
+def create_user():
     data = request.get_json()
-    profile = Profile.query.filter_by(user_id=user_id).first()
-    if not profile:
-        profile = Profile(user_id=user_id)
-        db.session.add(profile)
-
-    profile.profile_image_url = data.get("profile_image_url", profile.profile_image_url)
-    profile.bio = data.get("bio", profile.bio)
+    new_user = User(
+        username=data["username"],
+        email=data["email"],
+        password=data["password"]
+    )
+    db.session.add(new_user)
     db.session.commit()
-    return jsonify(profile.to_dict())
+    return jsonify({"success": "User created successfully"}), 201
+
+@users.route("/<int:id>", methods=["GET"])
+@jwt_required()
+def get_user(id):
+    user = User.query.get_or_404(id)
+    return jsonify(user_schema.dump(user)), 200
+
+@users.route("/<int:id>", methods=["PUT"])
+@jwt_required()
+def update_user(id):
+    user = User.query.get_or_404(id)
+    data = request.get_json()
+
+    user.username = data.get("username", user.username)
+    user.firstName = data.get("firstName", user.firstName)
+    user.lastName = data.get("lastName", user.lastName)
+    user.title = data.get("title", user.title)
+    user.aboutMe = data.get("aboutMe", user.aboutMe)
+    user.profilePicture = data.get("profilePicture", user.profilePicture)
+
+    db.session.commit()
+    return jsonify(user_schema.dump(user)), 200
+
+@users.route("/<int:id>", methods=["DELETE"])
+@jwt_required()
+def delete_user(id):
+    user = User.query.get_or_404(id)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"message": "User deleted successfully"}), 200
+
+@users.route("/current", methods=["GET"])
+@jwt_required()
+def get_current_user():
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+
+    if current_user:
+        return jsonify(user_schema.dump(current_user)), 200
+    else:
+        return jsonify({"error": "User not found"}), 404
