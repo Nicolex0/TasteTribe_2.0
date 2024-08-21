@@ -13,7 +13,7 @@ const FeaturedRecipes = () => {
     const fetchRecipes = async () => {
       try {
         const response = await api.get('/api/recipes', {
-          params: { dietType: 'Dessert' }
+          params: { dietType: 'Dessert' } // Fixes fetch by dietType
         });
         setRecipes(response.data);
         setLoading(false);
