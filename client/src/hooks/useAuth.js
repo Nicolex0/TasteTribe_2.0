@@ -7,7 +7,7 @@ export const useAuth = () => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch('/api/auth/protected', {
+        const response = await api.get('/api/auth/protected', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
