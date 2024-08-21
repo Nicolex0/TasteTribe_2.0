@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://tastetribe-2-0-final.onrender.com'; // Adjust this to your backend URL
+const API_URL = 'http://localhost:5000'; // Adjust this to your backend URL
 
 const api = axios.create({
   baseURL: API_URL,
