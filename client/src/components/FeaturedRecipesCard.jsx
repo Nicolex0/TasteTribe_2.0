@@ -87,7 +87,7 @@ const RecipeCard = ({ recipe }) => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-2xl p-8 flex flex-col h-full relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border border-green-200 hover:border-green-300 w-full max-w-3xl mx-auto">
+    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-2xl p-8 flex flex-col h-[700px] relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border border-green-200 hover:border-green-300 w-full max-w-3xl mx-auto">
       {/* Recipe Header */}
       <div className="flex items-center space-x-4 mb-6">
         <img
@@ -116,7 +116,7 @@ const RecipeCard = ({ recipe }) => {
       </div>
 
       {/* Recipe Details */}
-      <div className="mb-6 text-sm text-grey space-y-3 flex-grow">
+      <div className="mb-6 text-sm text-grey space-y-3 flex-grow overflow-y-auto">
         <p className="flex justify-between">
           <span className="font-semibold">Diet Type:</span> {recipe.dietType}
         </p>
