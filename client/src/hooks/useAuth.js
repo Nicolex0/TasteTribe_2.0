@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import api from '../api';
+
 
 export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -7,7 +9,7 @@ export const useAuth = () => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch('/api/auth/protected', {
+        const response = await api.get('/api/auth/protected', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
