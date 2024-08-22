@@ -28,15 +28,4 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
-export const checkAuthStatus = async () => {
-  try {
-    const response = await api.get('/api/auth/check-auth');
-    return response.data;
-  } catch (error) {
-    console.error('Error checking auth status:', error);
-    return { isAuthenticated: false };
-  }
-};
-
-
 export default api;

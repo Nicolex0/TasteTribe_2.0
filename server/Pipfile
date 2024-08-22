@@ -15,7 +15,6 @@ flask-jwt-extended = "*"
 sqlalchemy-serializer = "*"
 marshmallow = "*"
 python-dotenv = "*"
-gunicorn = "*"
 
 [dev-packages]
 
