@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   FaFacebookF,
   FaInstagram,
@@ -14,6 +15,7 @@ import { FaXTwitter } from "react-icons/fa6";
 const RecipeCard = ({ recipe }) => {
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const navigate = useNavigate();
 
   const toggleLike = (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ const RecipeCard = ({ recipe }) => {
   };
 
   const handleCommentClick = () => {
-    window.location.href = `/recipe-info/${recipe.id}`;
+    navigate(`/recipe-info/${recipe.id}`);
   };
 
   const handleShare = (platform) => {
@@ -42,7 +44,6 @@ const RecipeCard = ({ recipe }) => {
         )}&text=${encodeURIComponent(recipe.title)}`;
         break;
       case "instagram":
-        // Instagram doesn't have a direct sharing URL, so we'll open Instagram's homepage
         shareUrl = "https://www.instagram.com/";
         break;
       case "whatsapp":
@@ -88,7 +89,6 @@ const RecipeCard = ({ recipe }) => {
 
   return (
     <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-2xl p-8 flex flex-col h-full relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border border-green-200 hover:border-green-300 w-full max-w-3xl mx-auto">
-      {/* Recipe Header */}
       <div className="flex items-center space-x-4 mb-6">
         <img
           src={recipe.chefImage}
@@ -103,7 +103,6 @@ const RecipeCard = ({ recipe }) => {
         </div>
       </div>
 
-      {/* Recipe Image */}
       <div className="mb-6 relative overflow-hidden rounded-xl">
         <img
           src={recipe.image}
@@ -115,7 +114,6 @@ const RecipeCard = ({ recipe }) => {
         </div>
       </div>
 
-      {/* Recipe Details */}
       <div className="mb-6 text-sm text-grey space-y-3 flex-grow">
         <p className="flex justify-between">
           <span className="font-semibold">Diet Type:</span> {recipe.dietType}
@@ -136,15 +134,14 @@ const RecipeCard = ({ recipe }) => {
           {recipe.instructions}
         </p>
 
-        <a
-          href={`/recipeinfo/${recipe.id}`}
+        <button
+          onClick={() => navigate(`/recipeinfo/${recipe.id}`)}
           className="text-green-500 hover:text-green-600 text-xs block mt-2 underline"
         >
           View More Recipe Info
-        </a>
+        </button>
       </div>
 
-      {/* Likes, Ratings, and Bookmark */}
       <div className="flex items-center justify-between mb-6 bg-green-50 p-3 rounded-lg">
         <button
           onClick={toggleLike}
@@ -173,18 +170,17 @@ const RecipeCard = ({ recipe }) => {
             {bookmarked ? "Bookmarked" : "Bookmark"}
           </span>
         </button>
-        <a
-          href={`/recipe-info/${recipe.id}`}
+        <button
+          onClick={handleCommentClick}
           className="text-gray-500 hover:text-green-600 transition-colors duration-200 group relative"
         >
           <FaComment className="text-xl" />
           <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             Comment
           </span>
-        </a>
+        </button>
       </div>
 
-      {/* Social Media Share Buttons */}
       <div className="absolute bottom-4 right-4 flex space-x-4">
         <button
           onClick={() => handleShare("facebook")}
