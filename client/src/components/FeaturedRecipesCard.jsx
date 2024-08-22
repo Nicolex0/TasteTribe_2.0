@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FaFacebookF,
   FaInstagram,
@@ -23,11 +24,6 @@ const RecipeCard = ({ recipe }) => {
     e.preventDefault();
     setBookmarked(!bookmarked);
   };
-
-  const handleCommentClick = () => {
-    window.location.href = `/recipe-info/${recipe.id}`;
-  };
-
   const handleShare = (platform) => {
     let shareUrl = "";
     switch (platform) {
@@ -87,7 +83,7 @@ const RecipeCard = ({ recipe }) => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-2xl p-8 flex flex-col h-full relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border border-green-200 hover:border-green-300 w-full max-w-3xl mx-auto">
+    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-2xl p-8 flex flex-col h-[700px] relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border border-green-200 hover:border-green-300 w-full max-w-3xl mx-auto">
       {/* Recipe Header */}
       <div className="flex items-center space-x-4 mb-6">
         <img
@@ -116,7 +112,7 @@ const RecipeCard = ({ recipe }) => {
       </div>
 
       {/* Recipe Details */}
-      <div className="mb-6 text-sm text-grey space-y-3 flex-grow">
+      <div className="mb-6 text-sm text-grey space-y-3 flex-grow overflow-y-auto">
         <p className="flex justify-between">
           <span className="font-semibold">Diet Type:</span> {recipe.dietType}
         </p>
@@ -136,12 +132,12 @@ const RecipeCard = ({ recipe }) => {
           {recipe.instructions}
         </p>
 
-        <a
-          href={`/recipeinfo/${recipe.id}`}
+        <Link
+          to={`/recipes/${recipe.id}`}
           className="text-green-500 hover:text-green-600 text-xs block mt-2 underline"
         >
           View More Recipe Info
-        </a>
+        </Link>
       </div>
 
       {/* Likes, Ratings, and Bookmark */}
@@ -173,15 +169,15 @@ const RecipeCard = ({ recipe }) => {
             {bookmarked ? "Bookmarked" : "Bookmark"}
           </span>
         </button>
-        <a
-          href={`/recipe-info/${recipe.id}`}
+        <Link
+          to={`/recipes/${recipe.id}`}
           className="text-gray-500 hover:text-green-600 transition-colors duration-200 group relative"
         >
           <FaComment className="text-xl" />
           <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             Comment
           </span>
-        </a>
+        </Link>
       </div>
 
       {/* Social Media Share Buttons */}
