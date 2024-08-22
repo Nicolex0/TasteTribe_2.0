@@ -7,6 +7,10 @@ from models import db
 from config import Config
 from flask_cors import cross_origin
 import os
+from dotenv import load_dotenv  # Import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 # Import your blueprints
@@ -31,7 +35,8 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 # Enable CORS
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000"]}}, supports_credentials=True)
+
 
 # Register blueprints
 app.register_blueprint(auth, url_prefix='/api/auth')
