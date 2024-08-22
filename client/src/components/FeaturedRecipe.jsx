@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import FeaturedRecipesCard from '../components/FeaturedRecipesCard';
 import api from '../api';
+import FeaturedRecipesCard from '../components/FeaturedRecipesCard';
 
 // Define the API endpoint for fetching dessert recipes
 //const API_URL = 'http://127.0.0.1:5000/recipes?dietType=Dessert';
@@ -15,11 +15,9 @@ const FeaturedRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await api.get('/api/recipes');
-        // if (!response.ok) {
-        //   throw new Error('Network response was not ok');
-        // }
-        // const data = await response.json();
+        const response = await api.get('/api/recipes', {
+          params: { dietType: 'Dessert' } // Fixes fetch by dietType
+        });
         setRecipes(response.data);
         setLoading(false);
       } catch (error) {
