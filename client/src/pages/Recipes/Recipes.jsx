@@ -1,14 +1,18 @@
-import React from 'react'
-import FeaturedRecipe from '../../components/FeaturedRecipe'
-import ExploreRecipes from '../../components/ExploreRecipes'
+import React from "react";
+import FeaturedRecipe from "../../components/FeaturedRecipe";
+import ExploreRecipes from "../../components/ExploreRecipes";
 
 const Recipes = () => {
   return (
     <div>
-      <FeaturedRecipe/>
-      <ExploreRecipes />
-     </div>
-  )
-}
+      <div>
+        <FeaturedRecipe />
+      </div>
+      <div>
+        <ExploreRecipes />
+      </div>
+    </div>
+  );
+};
 
-export default Recipes
+export default Recipes;

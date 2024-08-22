@@ -14,6 +14,7 @@ flask = "*"
 flask-jwt-extended = "*"
 sqlalchemy-serializer = "*"
 marshmallow = "*"
+gunicorn = "*"
 
 [dev-packages]
 

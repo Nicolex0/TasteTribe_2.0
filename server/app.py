@@ -31,7 +31,8 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 # Enable CORS
-CORS(app, resources={r"/*": {"origins": "https://taste-tribe-2-0-rbje.vercel.app/"}})
+# CORS(app, resources={r"/*": {"origins": ["https://taste-tribe-2-0-rbje.vercel.app", "https://tastetribe-2-0-final.onrender.com"]}})
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Register blueprints
 app.register_blueprint(auth, url_prefix='/api/auth')
