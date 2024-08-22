@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FaFacebookF,
   FaInstagram,
@@ -23,11 +24,6 @@ const RecipeCard = ({ recipe }) => {
     e.preventDefault();
     setBookmarked(!bookmarked);
   };
-
-  const handleCommentClick = () => {
-    window.location.href = `/recipe-info/${recipe.id}`;
-  };
-
   const handleShare = (platform) => {
     let shareUrl = "";
     switch (platform) {
@@ -136,12 +132,12 @@ const RecipeCard = ({ recipe }) => {
           {recipe.instructions}
         </p>
 
-        <a
-          href={`/recipeinfo/${recipe.id}`}
+        <Link
+          to={`/recipes/${recipe.id}`}
           className="text-green-500 hover:text-green-600 text-xs block mt-2 underline"
         >
           View More Recipe Info
-        </a>
+        </Link>
       </div>
 
       {/* Likes, Ratings, and Bookmark */}
@@ -173,15 +169,15 @@ const RecipeCard = ({ recipe }) => {
             {bookmarked ? "Bookmarked" : "Bookmark"}
           </span>
         </button>
-        <a
-          href={`/recipe-info/${recipe.id}`}
+        <Link
+          to={`/recipes/${recipe.id}`}
           className="text-gray-500 hover:text-green-600 transition-colors duration-200 group relative"
         >
           <FaComment className="text-xl" />
           <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             Comment
           </span>
-        </a>
+        </Link>
       </div>
 
       {/* Social Media Share Buttons */}
