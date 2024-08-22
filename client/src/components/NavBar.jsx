@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaUser, FaCaretDown } from "react-icons/fa";
-import { useAuth } from "../hooks/useAuth";
+import { checkAuthStatus } from '../api';
 import api from '../api';
-
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const { isAuthenticated, isLoading } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAuthStatus = async () => {
+      const { isAuthenticated } = await checkAuthStatus();
+      setIsAuthenticated(isAuthenticated);
+      setIsLoading(false);
+    };
+    fetchAuthStatus();
+  }, []);
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -22,23 +31,18 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await api.post('/api/auth/logout', {}, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const response = await api.post('/api/auth/logout', {});
       if (response.status === 200) {
         localStorage.removeItem('token');
+        setIsAuthenticated(false);
         navigate('/');
       }
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
-  
 
   const navItems = [
-    //{ name: "HOME", path: "/", requireAuth: false },
     { name: "RECIPES", path: "/recipes", requireAuth: true },
     { name: "MY RECIPES", path: "/myrecipes", requireAuth: true },
   ];
@@ -50,13 +54,11 @@ const NavBar = () => {
   return (
     <nav className="bg-customGreen text-white py-4 font-urbanist sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center px-4">
-        {/* Logo */}
         <NavLink to="/" className="flex items-center">
           <img src="https://res.cloudinary.com/dud0jjkln/image/upload/v1723487640/1_fenfqx.jpg" alt="TasteTribe Logo" className="h-8 mr-2" />
           <span className="text-xl font-bold">TasteTribe</span>
         </NavLink>
 
-        {/* Navigation Links */}
         <div className="hidden md:flex space-x-6">
           {isAuthenticated && (
             <>
@@ -70,7 +72,6 @@ const NavBar = () => {
           )}
         </div>
 
-        {/* Auth Buttons / Profile Dropdown */}
         <div className="flex items-center space-x-4">
           {isAuthenticated ? (
             <div className="relative">
@@ -97,13 +98,11 @@ const NavBar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={handleMenuToggle}>
           <FaBars size={24} />
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden mt-4">
           {isAuthenticated ? (
