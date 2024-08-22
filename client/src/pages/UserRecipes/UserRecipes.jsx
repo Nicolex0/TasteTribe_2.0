@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import UserRecipeCard from '../../components/UserRecipeCard';
+import React, { useEffect, useState } from 'react';
 import api from '../../api';
+import UserRecipeCard from '../../components/UserRecipeCard';
 
 const UserRecipes = () => {
   const [recipes, setRecipes] = useState([]);

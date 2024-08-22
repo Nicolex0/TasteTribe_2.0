@@ -1,6 +1,6 @@
 import React from "react";
-import FeaturedRecipe from "../../components/FeaturedRecipe";
 import ExploreRecipes from "../../components/ExploreRecipes";
+import FeaturedRecipe from "../../components/FeaturedRecipe";
 
 const Recipes = () => {
   return (

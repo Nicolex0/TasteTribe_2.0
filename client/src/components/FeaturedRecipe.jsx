@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import FeaturedRecipesCard from '../components/FeaturedRecipesCard';
 import api from '../api';
+import FeaturedRecipesCard from '../components/FeaturedRecipesCard';
 
 const FeaturedRecipes = () => {
   const [recipes, setRecipes] = useState([]);
