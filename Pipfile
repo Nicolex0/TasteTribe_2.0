@@ -13,6 +13,7 @@ flask-migrate = "*"
 flask = "*"
 flask-jwt-extended = "*"
 sqlalchemy-serializer = "*"
+python-dotenv = "*"
 marshmallow = "*"
 
 [dev-packages]
