@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
 import {
-  FaFacebookF,
-  FaInstagram,
-  FaWhatsapp,
-  FaHeart,
-  FaComment,
-  FaStar,
   FaBookmark,
   FaClock,
+  FaComment,
+  FaFacebookF,
+  FaHeart,
+  FaInstagram,
+  FaStar,
+  FaWhatsapp,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 const RecipeCard = ({ recipe }) => {
   const [liked, setLiked] = useState(false);
@@ -114,7 +114,7 @@ const RecipeCard = ({ recipe }) => {
         </div>
       </div>
 
-      <div className="mb-6 text-sm text-grey space-y-3 flex-grow">
+      <div className="mb-6 text-sm text-grey space-y-3 flex-grow overflow-y-auto">
         <p className="flex justify-between">
           <span className="font-semibold">Diet Type:</span> {recipe.dietType}
         </p>

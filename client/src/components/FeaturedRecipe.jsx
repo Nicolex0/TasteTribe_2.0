@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import api from '../api';
 import FeaturedRecipesCard from '../components/FeaturedRecipesCard';
 
-// Define the API endpoint for fetching dessert recipes
-//const API_URL = 'http://127.0.0.1:5000/recipes?dietType=Dessert';
-
 const FeaturedRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -45,7 +42,7 @@ const FeaturedRecipes = () => {
     <div className="bg-gradient-to-r from-green-50 to-green-100 min-h-screen p-8 font-urbanist">
       <h1 className="text-4xl font-bold text-center mb-12 text-green-800 tracking-wide">Featured Recipes</h1>
 
-      <div className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-lg shadow-xl">
+      <div className="pb-20 relative w-full max-w-4xl mx-auto overflow-hidden rounded-lg shadow-xl">
         <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
