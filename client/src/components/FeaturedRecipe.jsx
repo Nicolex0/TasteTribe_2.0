@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import api from '../api';
-import FeaturedRecipesCard from '../components/FeaturedRecipesCard';
+import React, { useEffect, useState } from "react";
+import api from "../api";
+import FeaturedRecipesCard from "../components/FeaturedRecipesCard";
 
 const FeaturedRecipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -12,8 +11,8 @@ const FeaturedRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await api.get('/api/recipes', {
-          params: { dietType: 'Dessert' } // Fixes fetch by dietType
+        const response = await api.get("/api/recipes", {
+          params: { dietType: "Dessert" }, // Fixes fetch by dietType
         });
         setRecipes(response.data);
         setLoading(false);
@@ -28,32 +27,36 @@ const FeaturedRecipes = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.ceil(recipes.length / 2));
+      setCurrentIndex(
+        (prevIndex) => (prevIndex + 1) % Math.ceil(recipes.length / 2)
+      );
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(interval);
   }, [recipes]);
-  
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="bg-gradient-to-r from-green-50 to-green-100 min-h-screen p-8 font-urbanist">
-      <h1 className="text-4xl font-bold text-center mb-12 text-green-800 tracking-wide">Featured Recipes</h1>
+      <h1 className="text-4xl font-bold text-center mb-12 text-green-800 tracking-wide">
+        Featured Recipes
+      </h1>
 
       <div className="pb-20 relative w-full max-w-4xl mx-auto overflow-hidden rounded-lg shadow-xl">
         <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
-          {Array.from({ length: Math.ceil(recipes.length / 2) }, (_, i) => i * 2).map((startIndex) => (
+          {Array.from(
+            { length: Math.ceil(recipes.length / 2) },
+            (_, i) => i * 2
+          ).map((startIndex) => (
             <div key={startIndex} className="w-full flex-shrink-0 flex">
               {recipes.slice(startIndex, startIndex + 2).map((recipe) => (
                 <div key={recipe.id} className="w-1/2 px-2">
-                  <Link to={`/recipes/${recipe.id}`} className="block w-full h-full">
-                    <FeaturedRecipesCard recipe={recipe} />
-                  </Link>
+                  <FeaturedRecipesCard recipe={recipe} />
                 </div>
               ))}
             </div>
@@ -64,7 +67,7 @@ const FeaturedRecipes = () => {
             <button
               key={index}
               className={`w-3 h-3 rounded-full ${
-                index === currentIndex ? 'bg-green-600' : 'bg-green-300'
+                index === currentIndex ? "bg-green-600" : "bg-green-300"
               }`}
               onClick={() => setCurrentIndex(index)}
             />
