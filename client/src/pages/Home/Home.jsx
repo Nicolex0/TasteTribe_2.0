@@ -10,6 +10,7 @@ const Home = () => {
           <div className="space-x-4">
             <Link to='/login' className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded">Log In</Link>
             <Link to='/signup' className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded">Sign Up</Link>
+            <Link to='/recipes' className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded">Discover Recipes</Link>
           </div>
         </div>
       </div>
