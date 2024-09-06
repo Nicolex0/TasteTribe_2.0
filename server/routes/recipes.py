@@ -74,9 +74,23 @@ def update_recipe(id):
     recipe.servings = data.get("servings", recipe.servings)
     recipe.countryOfOrigin = data.get("countryOfOrigin", recipe.countryOfOrigin)
     recipe.dietType = data.get("dietType", recipe.dietType)
+    data = request.json
 
-    db.session.commit()
-    return jsonify(recipe_schema.dump(recipe)), 200
+    try:
+        if "ingredients" in data:
+            data["ingredients"] = "".join(data["ingredients"])
+
+        if "instructions" in data:
+            data["instructions"] = "".join(data["instructions"])
+
+        for key, value in data.items():
+            setattr(recipe, key, value)
+
+        db.session.commit()
+        return jsonify(recipe_schema.dump(recipe)), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 
 @recipes.route("/<int:id>", methods=["DELETE"])
