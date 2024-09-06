@@ -13,7 +13,7 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 
-const RecipeCard = ({ recipe }) => {
+const FeaturedRecipesCard = ({ recipe }) => {
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const RecipeCard = ({ recipe }) => {
   };
 
   const handleCommentClick = () => {
-    navigate(`/recipe-info/${recipe.id}`);
+    navigate(`/recipes/${recipe.id}`);
   };
 
   const handleShare = (platform) => {
@@ -89,127 +89,127 @@ const RecipeCard = ({ recipe }) => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-2xl p-8 flex flex-col h-full relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border border-green-200 hover:border-green-300 w-full max-w-3xl mx-auto">
-      <div className="flex items-center space-x-4 mb-6">
+    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 flex flex-col h-[800px] relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border-2 border-green-300 hover:border-green-400 w-full max-w-4xl mx-auto">
+      <div className="flex items-center space-x-6 mb-6">
         <img
           src={recipe.chefImage}
           alt="Chef"
-          className="w-16 h-16 rounded-full border-2 border-green-400 shadow-md"
+          className="w-16 h-16 rounded-full border-4 border-green-400 shadow-lg"
         />
-        <div>
-          <h1 className="text-2xl font-bold text-green-800">{recipe.title}</h1>
-          <p className="text-sm text-green-600">
+
+        <div className="flex-1 min-w-0">
+          <h1 className="text-2xl font-bold text-green-800 truncate">{recipe.title}</h1>
+          <p className="text-sm text-green-600 truncate">
             by <span className="font-semibold">{recipe.chefName}</span>
           </p>
         </div>
       </div>
 
-      <div className="mb-6 relative overflow-hidden rounded-xl">
+      <div className="mb-6 relative overflow-hidden rounded-2xl">
         <img
           src={recipe.image}
           alt="Recipe"
-          className="w-full h-56 object-cover shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+          className="w-full h-64 object-cover shadow-xl transition-transform duration-300 ease-in-out hover:scale-110"
         />
-        <div className="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full px-3 py-1 text-sm font-semibold text-green-700">
-          <FaClock className="inline mr-1" /> {recipe.prepTime}
+
+        <div className="absolute top-3 right-3 bg-white bg-opacity-90 rounded-full px-3 py-2 text-sm font-semibold text-green-700 shadow-md">
+          <FaClock className="inline mr-2" /> {recipe.prepTime}
         </div>
       </div>
 
-      <div className="mb-6 text-sm text-grey space-y-3 flex-grow overflow-y-auto">
+      <div className="mb-6 text-sm text-gray-700 space-y-3 flex-grow overflow-y-auto max-h-48 pr-2 custom-scrollbar">
         <p className="flex justify-between">
-          <span className="font-semibold">Diet Type:</span> {recipe.dietType}
+          <span className="font-semibold text-green-700">Diet Type:</span> {recipe.dietType}
         </p>
         <p className="flex justify-between">
-          <span className="font-semibold">Servings:</span> {recipe.servings}
+          <span className="font-semibold text-green-700">Servings:</span> {recipe.servings}
         </p>
         <p className="flex justify-between">
-          <span className="font-semibold">Country of Origin:</span>{" "}
+          <span className="font-semibold text-green-700">Country of Origin:</span>{" "}
           {recipe.countryOfOrigin}
         </p>
         <p>
-          <span className="font-semibold">Ingredients:</span>{" "}
+          <span className="font-semibold text-green-700">Ingredients:</span>{" "}
           {recipe.ingredients}
         </p>
         <p>
-          <span className="font-semibold">Instructions:</span>{" "}
+          <span className="font-semibold text-green-700">Instructions:</span>{" "}
           {recipe.instructions}
         </p>
-
-        <button
-          onClick={() => navigate(`/recipeinfo/${recipe.id}`)}
-          className="text-green-500 hover:text-green-600 text-xs block mt-2 underline"
-        >
-          View More Recipe Info
-        </button>
       </div>
 
-      <div className="flex items-center justify-between mb-6 bg-green-50 p-3 rounded-lg">
+      <Link
+        to={`/recipes/${recipe.id}`}
+        className="text-green-600 hover:text-green-700 text-sm block mb-4 underline font-semibold transition-colors duration-200"
+      >
+        See More Recipe Details
+      </Link>
+
+      <div className="flex items-center justify-between mb-6 bg-green-100 p-3 rounded-xl text-sm shadow-inner">
         <button
           onClick={toggleLike}
           className={`flex items-center space-x-2 ${
-            liked ? "text-red-500" : "text-gray-500"
+            liked ? "text-red-500" : "text-gray-600"
           } hover:text-red-600 transition-colors duration-200`}
         >
           <FaHeart className="text-xl" />
           <span>{liked ? "Liked" : "Like"}</span>
         </button>
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-2">
           <div className="flex">{renderStars(recipe.rating)}</div>
           <span className="font-semibold">{recipe.rating.toFixed(1)}</span>
-          <span className="text-gray-500">
-            ({recipe.numberOfRatings} ratings)
-          </span>
         </div>
         <button
           onClick={toggleBookmark}
           className={`${
-            bookmarked ? "text-blue-500" : "text-gray-500"
+            bookmarked ? "text-blue-500" : "text-gray-600"
           } group relative hover:text-blue-600 transition-colors duration-200`}
         >
           <FaBookmark className="text-xl" />
-          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             {bookmarked ? "Bookmarked" : "Bookmark"}
           </span>
         </button>
         <button
           onClick={handleCommentClick}
-          className="text-gray-500 hover:text-green-600 transition-colors duration-200 group relative"
+          className="text-gray-600 hover:text-green-600 transition-colors duration-200 group relative"
         >
           <FaComment className="text-xl" />
-          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             Comment
           </span>
         </button>
       </div>
 
-      <div className="absolute bottom-4 right-4 flex space-x-4">
+
+      <div className="flex flex-wrap justify-end gap-4">
         <button
           onClick={() => handleShare("facebook")}
-          className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+          className="text-blue-600 hover:text-blue-800 transition-colors duration-200 transform hover:scale-110"
         >
-          <FaFacebookF className="text-xl" />
+          <FaFacebookF className="text-2xl" />
         </button>
         <button
           onClick={() => handleShare("twitter")}
-          className="text-black hover:text-gray-700 transition-colors duration-200"
+          className="text-black hover:text-gray-700 transition-colors duration-200 transform hover:scale-110"
         >
-          <FaXTwitter className="text-xl" />
+          <FaXTwitter className="text-2xl" />
         </button>
         <button
           onClick={() => handleShare("instagram")}
-          className="text-pink-600 hover:text-pink-800 transition-colors duration-200"
+          className="text-pink-600 hover:text-pink-800 transition-colors duration-200 transform hover:scale-110"
         >
-          <FaInstagram className="text-xl" />
+          <FaInstagram className="text-2xl" />
         </button>
         <button
           onClick={() => handleShare("whatsapp")}
-          className="text-green-600 hover:text-green-800 transition-colors duration-200"
+          className="text-green-600 hover:text-green-800 transition-colors duration-200 transform hover:scale-110"
         >
-          <FaWhatsapp className="text-xl" />
+          <FaWhatsapp className="text-2xl" />
         </button>
       </div>
     </div>
   );
 };
 
-export default RecipeCard;
+export default FeaturedRecipesCard;
