@@ -1,5 +1,5 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import App from "./App";
 import Home from "./pages/Home/Home";
 import AboutUs from "./pages/AboutUs/AboutUs";
@@ -15,12 +15,12 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminSignIn from "./pages/Admin/AdminSignIn";
 
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('token') !== null;
+  const isAuthenticated = localStorage.getItem("token") !== null;
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 const AdminRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('adminToken') !== null;
+  const isAuthenticated = localStorage.getItem("adminToken") !== null;
   return isAuthenticated ? children : <Navigate to="/admin/signin" replace />;
 };
 
@@ -51,18 +51,22 @@ const routes = [
         path: "/contactus",
         element: <ContactUs />,
       },
-      
+      {
+        path: "/recipes",
+        element: <Recipes />,
+      },
+
       // Protected routes
       {
-        element: <ProtectedRoute><Outlet /></ProtectedRoute>,
+        element: (
+          <ProtectedRoute>
+            <Outlet />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: "/recipes/:recipeId",
             element: <RecipeInfo />,
-          },
-          {
-            path: "/recipes",
-            element: <Recipes />,
           },
           {
             path: "/myrecipes",
@@ -86,7 +90,11 @@ const routes = [
             element: <AdminSignIn />,
           },
           {
-            element: <AdminRoute><Outlet /></AdminRoute>,
+            element: (
+              <AdminRoute>
+                <Outlet />
+              </AdminRoute>
+            ),
             children: [
               {
                 path: "dashboard",
@@ -95,7 +103,7 @@ const routes = [
             ],
           },
         ],
-      },         
+      },
     ],
   },
 ];
