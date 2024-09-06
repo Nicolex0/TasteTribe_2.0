@@ -7,11 +7,10 @@ from models import db
 from config import Config
 from flask_cors import cross_origin
 import os
-from dotenv import load_dotenv  # Import load_dotenv
+from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
-
 
 # Import your blueprints
 from routes.auth import auth, BLACKLIST
@@ -48,7 +47,6 @@ CORS(
     },
     supports_credentials=True,
 )
-
 
 # Register blueprints
 app.register_blueprint(auth, url_prefix="/api/auth")
