@@ -11,7 +11,7 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const FeaturedRecipesCard = ({ recipe }) => {
   const [liked, setLiked] = useState(false);
@@ -98,7 +98,9 @@ const FeaturedRecipesCard = ({ recipe }) => {
         />
 
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold text-green-800 truncate">{recipe.title}</h1>
+          <h1 className="text-2xl font-bold text-green-800 truncate">
+            {recipe.title}
+          </h1>
           <p className="text-sm text-green-600 truncate">
             by <span className="font-semibold">{recipe.chefName}</span>
           </p>
@@ -119,13 +121,17 @@ const FeaturedRecipesCard = ({ recipe }) => {
 
       <div className="mb-6 text-sm text-gray-700 space-y-3 flex-grow overflow-y-auto max-h-48 pr-2 custom-scrollbar">
         <p className="flex justify-between">
-          <span className="font-semibold text-green-700">Diet Type:</span> {recipe.dietType}
+          <span className="font-semibold text-green-700">Diet Type:</span>{" "}
+          {recipe.dietType}
         </p>
         <p className="flex justify-between">
-          <span className="font-semibold text-green-700">Servings:</span> {recipe.servings}
+          <span className="font-semibold text-green-700">Servings:</span>{" "}
+          {recipe.servings}
         </p>
         <p className="flex justify-between">
-          <span className="font-semibold text-green-700">Country of Origin:</span>{" "}
+          <span className="font-semibold text-green-700">
+            Country of Origin:
+          </span>{" "}
           {recipe.countryOfOrigin}
         </p>
         <p>
@@ -180,7 +186,6 @@ const FeaturedRecipesCard = ({ recipe }) => {
           </span>
         </button>
       </div>
-
 
       <div className="flex flex-wrap justify-end gap-4">
         <button
