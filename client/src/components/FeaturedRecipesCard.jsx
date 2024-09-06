@@ -89,7 +89,7 @@ const FeaturedRecipesCard = ({ recipe }) => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 flex flex-col h-[800px] relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border-2 border-green-300 hover:border-green-400 w-full max-w-4xl mx-auto">
+    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 flex flex-col h-[800px] w-[400px] relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border-2 border-green-300 hover:border-green-400">
       <div className="flex items-center space-x-6 mb-6">
         <img
           src={recipe.chefImage}

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from '../api';
+import api from "../api";
 
 import { FaXTwitter } from "react-icons/fa6";
 import {
   FaSearch,
   FaBookmark,
   FaFacebook,
-  FaTwitter,
   FaPinterest,
   FaWhatsapp,
   FaInstagram,
@@ -37,14 +36,14 @@ const ExploreRecipes = () => {
     const fetchRecipes = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/api/recipes');
+        const response = await api.get("/api/recipes");
         setRecipes(response.data);
         setError(null);
       } catch (error) {
-        console.error('Error fetching recipes:', error);
+        console.error("Error fetching recipes:", error);
         if (error.response && error.response.status === 422) {
           setError("Unauthorized. Please log in.");
-          navigate('/login');
+          navigate("/login");
         } else {
           setError("An error occurred while fetching recipes.");
         }
@@ -82,7 +81,7 @@ const ExploreRecipes = () => {
         shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
         break;
       case "instagram":
-        shareUrl = `https://instagram.com/pin/create/button/?url=${url}&description=${text}`;
+        shareUrl = `https://www.instagram.com/`;
         break;
       case "whatsapp":
         shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
@@ -98,31 +97,39 @@ const ExploreRecipes = () => {
     try {
       if (bookmarkedRecipes.includes(recipeId)) {
         await api.delete(`/api/bookmarks/${recipeId}`);
-        setBookmarkedRecipes(bookmarkedRecipes.filter(id => id !== recipeId));
+        setBookmarkedRecipes(bookmarkedRecipes.filter((id) => id !== recipeId));
       } else {
-        await api.post('/api/bookmarks', { recipeId });
+        await api.post("/api/bookmarks", { recipeId });
         setBookmarkedRecipes([...bookmarkedRecipes, recipeId]);
       }
     } catch (error) {
-      console.error('Error toggling bookmark:', error);
+      console.error("Error toggling bookmark:", error);
     }
   };
 
   if (loading) {
-    return <div className="text-center mt-8">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen text-2xl font-semibold text-green-600">
+        Loading...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center mt-8 text-red-500">{error}</div>;
+    return (
+      <div className="flex justify-center items-center h-screen text-2xl font-semibold text-red-600">
+        {error}
+      </div>
+    );
   }
 
   return (
-    <div className="bg-green-50 min-h-screen p-8 font-urbanist">
-      <h1 className="text-4xl font-bold text-center mb-12 text-black">
-        Explore Recipes
+    <div className="bg-gradient-to-b from-green-50 to-green-100 min-h-screen p-8 font-urbanist">
+      <h1 className="text-5xl font-extrabold text-center mb-12 text-green-800 tracking-wide">
+        Explore Culinary Delights
       </h1>
 
-      <div className="flex justify-center space-x-4 mb-12">
+      <div className="flex flex-wrap justify-center gap-4 mb-12">
         {dietType.map((type) => (
           <button
             key={type}
@@ -130,7 +137,7 @@ const ExploreRecipes = () => {
               selectedDietType === type
                 ? "bg-green-600 text-white"
                 : "bg-white text-green-600"
-            } rounded-full shadow-lg transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50`}
+            } rounded-full shadow-lg transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 font-semibold text-lg`}
             onClick={() => setSelectedDietType(type)}
           >
             {type}
@@ -138,27 +145,27 @@ const ExploreRecipes = () => {
         ))}
       </div>
 
-      <div className="flex justify-between items-center mb-8">
-        <div className="relative w-full max-w-xl">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div className="relative w-full md:w-2/3 lg:w-1/2">
           <input
             type="text"
             placeholder="Search recipes or chefs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-6 py-3 pl-12 pr-10 text-green-600 bg-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+            className="w-full px-6 py-4 pl-12 pr-10 text-green-600 bg-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 text-lg"
           />
-          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-600" />
+          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-600 text-xl" />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center w-full md:w-auto">
           <label
             htmlFor="country-select"
-            className="mr-4 text-green-600 font-semibold text-lg"
+            className="mr-4 text-green-700 font-semibold text-lg"
           >
             Select Country:
           </label>
           <select
             id="country-select"
-            className="px-6 py-3 bg-white text-green-600 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 cursor-pointer"
+            className="px-6 py-3 bg-white text-green-600 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 cursor-pointer text-lg"
             value={selectedCountry}
             onChange={(e) => setSelectedCountry(e.target.value)}
           >
@@ -175,7 +182,7 @@ const ExploreRecipes = () => {
         {filteredRecipes.map((recipe) => (
           <div
             key={recipe.id}
-            className="transform transition duration-300 hover:scale-105 bg-white rounded-xl shadow-xl overflow-hidden"
+            className="transform transition duration-300 hover:scale-105 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full"
           >
             <div className="relative h-64">
               <img
@@ -183,64 +190,74 @@ const ExploreRecipes = () => {
                 alt={recipe.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-0 right-0 bg-green-600 text-white px-3 py-1 rounded-bl-lg">
+              <div className="absolute top-0 right-0 bg-green-600 text-white px-4 py-2 rounded-bl-2xl font-semibold">
                 {recipe.dietType}
               </div>
             </div>
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-2xl font-bold text-green-800">
-                  {recipe.title}
-                </h3>
-                <FaBookmark
-                  className={`text-2xl cursor-pointer ${
-                    bookmarkedRecipes.includes(recipe.id)
-                      ? "text-blue-500"
-                      : "text-gray-400"
-                  }`}
-                  onClick={() => toggleBookmark(recipe.id)}
-                />
+            <div className="p-6 flex-grow flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-2xl font-bold text-green-800 truncate">
+                    {recipe.title}
+                  </h3>
+                  <FaBookmark
+                    className={`text-3xl cursor-pointer transition-colors duration-300 ${
+                      bookmarkedRecipes.includes(recipe.id)
+                        ? "text-blue-500 hover:text-blue-600"
+                        : "text-gray-400 hover:text-gray-600"
+                    }`}
+                    onClick={() => toggleBookmark(recipe.id)}
+                  />
+                </div>
+                <div className="flex items-center mb-4">
+                  <img
+                    src={recipe.chefImage}
+                    alt={recipe.chefName}
+                    className="w-12 h-12 rounded-full mr-3 border-2 border-green-500"
+                  />
+                  <span className="text-gray-700 font-medium truncate">
+                    {recipe.chefName}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm text-gray-600 mb-4">
+                  <span>Prep Time: {recipe.prepTime}</span>
+                  <span>Servings: {recipe.servings}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-yellow-500 font-bold text-lg">
+                    ★ {recipe.rating}
+                  </span>
+                  <span className="text-green-600 font-semibold">
+                    {recipe.countryOfOrigin}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center mb-4">
-                <img
-                  src={recipe.chefImage}
-                  alt={recipe.chefName}
-                  className="w-10 h-10 rounded-full mr-3"
-                />
-                <span className="text-gray-600">{recipe.chefName}</span>
-              </div>
-              <div className="flex justify-between text-sm text-gray-500 mb-4">
-                <span>Prep Time: {recipe.prepTime}</span>
-                <span>Servings: {recipe.servings}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-yellow-500">★ {recipe.rating}</span>
-                <span className="text-green-600">{recipe.countryOfOrigin}</span>
-              </div>
-              <Link
-                to={`/recipes/${recipe.id}`}
-                className="mt-4 block w-full text-center bg-green-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105"
-              >
-                View Recipe
-              </Link>
+              <div>
+                <Link
+                  to={`/recipes/${recipe.id}`}
+                  className="mt-6 block w-full text-center bg-green-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 text-lg"
+                >
+                  View Recipe
+                </Link>
 
-              <div className="mt-4 flex justify-end space-x-4">
-                <FaFacebook
-                  className="text-blue-600 cursor-pointer text-2xl hover:text-blue-800 transition-colors duration-300"
-                  onClick={() => shareOnSocialMedia("facebook", recipe)}
-                />
-                <FaXTwitter
-                  className="text-black cursor-pointer text-2xl hover:text-blue-600 transition-colors duration-300"
-                  onClick={() => shareOnSocialMedia("twitter", recipe)}
-                />
-                <FaInstagram
-                  className="text-pink-800 cursor-pointer text-2xl hover:text-pink-900 transition-colors duration-300"
-                  onClick={() => shareOnSocialMedia("instagram", recipe)}
-                />
-                <FaWhatsapp
-                  className="text-green-500 cursor-pointer text-2xl hover:text-green-700 transition-colors duration-300"
-                  onClick={() => shareOnSocialMedia("whatsapp", recipe)}
-                />
+                <div className="mt-4 flex justify-center space-x-6">
+                  <FaFacebook
+                    className="text-blue-600 cursor-pointer text-3xl hover:text-blue-800 transition-colors duration-300"
+                    onClick={() => shareOnSocialMedia("facebook", recipe)}
+                  />
+                  <FaXTwitter
+                    className="text-black cursor-pointer text-3xl hover:text-blue-600 transition-colors duration-300"
+                    onClick={() => shareOnSocialMedia("twitter", recipe)}
+                  />
+                  <FaInstagram
+                    className="text-pink-600 cursor-pointer text-3xl hover:text-pink-800 transition-colors duration-300"
+                    onClick={() => shareOnSocialMedia("instagram", recipe)}
+                  />
+                  <FaWhatsapp
+                    className="text-green-500 cursor-pointer text-3xl hover:text-green-700 transition-colors duration-300"
+                    onClick={() => shareOnSocialMedia("whatsapp", recipe)}
+                  />
+                </div>
               </div>
             </div>
           </div>
