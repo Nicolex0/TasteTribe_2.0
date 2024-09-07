@@ -15,11 +15,13 @@ const UserProfile = () => {
   const [title, setTitle] = useState("");
   const [email, setEmail] = useState("");
   const [aboutMe, setAboutMe] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
   const [recipes, setRecipes] = useState(0);
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
+  const [previewImage, setPreviewImage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +37,7 @@ const UserProfile = () => {
         setTitle(userData.title || "");
         setEmail(userData.email || "");
         setAboutMe(userData.aboutMe || "");
+        setProfilePicture(userData.profilePicture || "");
 
         await fetchNotifications();
         await fetchBookmarks();
@@ -87,7 +90,9 @@ const UserProfile = () => {
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    setPreviewImage(URL.createObjectURL(selectedFile));
   };
 
   const handleUploadClick = () => {
@@ -157,6 +162,14 @@ const UserProfile = () => {
         withCredentials: true,
       });
       console.log("Avatar uploaded successfully", response.data);
+
+      // Update the profilePicture state with the full URL
+      setProfilePicture(response.data.profilePicture);
+
+      // Clear the file and previewImage states
+      setFile(null);
+      setPreviewImage(null);
+
       toast.success("Avatar uploaded successfully!");
     } catch (error) {
       console.error("Error uploading avatar:", error);
@@ -220,9 +233,9 @@ const UserProfile = () => {
                 <div className="flex flex-col items-center">
                   <img
                     src={
-                      file
-                        ? URL.createObjectURL(file)
-                        : "https://via.placeholder.com/150"
+                      previewImage ||
+                      profilePicture ||
+                      "https://via.placeholder.com/150"
                     }
                     alt="Avatar"
                     className="w-32 h-32 rounded-full border-4 border-green-100 shadow-md"
