@@ -153,3 +153,14 @@ def get_bookmarked_recipes():
         Recipe.query.join(Bookmark).filter(Bookmark.userId == current_user.id).all()
     )
     return jsonify(recipes_schema.dump(bookmarked_recipes)), 200
+
+
+@recipes.route("/<int:id>/bookmark", methods=["GET"])
+@jwt_required()
+def get_bookmark_by_id(id):
+    current_user = User.query.get(get_jwt_identity())
+    bookmark = Bookmark.query.filter_by(userId=current_user.id, recipeId=id).first()
+    if bookmark:
+        return jsonify({"bookmarked": True}), 200
+    else:
+        return jsonify({"bookmarked": False}), 200
