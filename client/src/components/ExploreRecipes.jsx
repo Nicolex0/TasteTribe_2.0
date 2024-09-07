@@ -63,16 +63,28 @@ const ExploreRecipes = () => {
         setRecipes(response.data);
         const bookmarkStatuses = {};
         for (const recipe of response.data) {
-          const bookmarkResponse = await api.get(
-            `/api/recipes/${recipe.id}/bookmark`
-          );
-          bookmarkStatuses[recipe.id] = bookmarkResponse.data.bookmarked;
+          try {
+            const bookmarkResponse = await api.get(
+              `/api/recipes/${recipe.id}/bookmark`
+            );
+            bookmarkStatuses[recipe.id] = bookmarkResponse.data.bookmarked;
+          } catch (bookmarkError) {
+            if (
+              bookmarkError.response &&
+              bookmarkError.response.status === 401
+            ) {
+              console.log("User not authenticated for bookmarks");
+              bookmarkStatuses[recipe.id] = false;
+            } else {
+              console.error("Error fetching bookmark status:", bookmarkError);
+            }
+          }
         }
         setBookmarkedRecipes(bookmarkStatuses);
         setError(null);
       } catch (error) {
         console.error("Error fetching recipes:", error);
-        if (error.response && error.response.status === 422) {
+        if (error.response && error.response.status === 401) {
           setError("Unauthorized. Please log in.");
           navigate("/login");
         } else {
@@ -186,15 +198,28 @@ const ExploreRecipes = () => {
       }
     } catch (error) {
       console.error("Error toggling bookmark:", error);
-      toast.error("Failed to update bookmark. Please try again.", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      if (error.response && error.response.status === 401) {
+        toast.error("Please log in to bookmark recipes.", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        navigate("/login");
+      } else {
+        toast.error("Failed to update bookmark. Please try again.", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     }
   };
 
