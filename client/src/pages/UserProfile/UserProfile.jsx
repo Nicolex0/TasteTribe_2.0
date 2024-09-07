@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../../api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserProfile = () => {
   const [file, setFile] = useState(null);
@@ -23,7 +25,9 @@ const UserProfile = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const userResponse = await api.get("/api/users/current");
+        const userResponse = await api.get("/api/users/current", {
+          withCredentials: true,
+        });
         const userData = userResponse.data;
         setUserId(userData.id);
         setFirstName(userData.firstName || "");
@@ -48,7 +52,9 @@ const UserProfile = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await api.get("/api/notifications");
+      const response = await api.get("/api/notifications", {
+        withCredentials: true,
+      });
       setNotifications(response.data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -57,7 +63,9 @@ const UserProfile = () => {
 
   const fetchBookmarks = async () => {
     try {
-      const response = await api.get("/api/recipes/bookmarked");
+      const response = await api.get("/api/recipes/bookmarked", {
+        withCredentials: true,
+      });
       setBookmarks(response.data);
     } catch (error) {
       console.error("Error fetching bookmarks:", error);
@@ -66,7 +74,9 @@ const UserProfile = () => {
 
   const fetchUserStats = async () => {
     try {
-      const response = await api.get("/api/user-stats");
+      const response = await api.get("/api/user-stats", {
+        withCredentials: true,
+      });
       const data = response.data;
       setRecipes(data.recipes);
       setFollowers(data.followers);
@@ -114,18 +124,22 @@ const UserProfile = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.put(`/api/users/${userId}`, {
-        firstName,
-        lastName,
-        title,
-        email,
-        aboutMe,
-      });
+      const response = await api.put(
+        `/api/users/${userId}`,
+        {
+          firstName,
+          lastName,
+          title,
+          email,
+          aboutMe,
+        },
+        { withCredentials: true }
+      );
       console.log("Profile updated successfully", response.data);
-      // You might want to show a success message to the user here
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      // You might want to show an error message to the user here
+      toast.error("Error updating profile. Please try again.");
     }
   };
 
@@ -140,11 +154,13 @@ const UserProfile = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true,
       });
       console.log("Avatar uploaded successfully", response.data);
-      // You might want to update the user's avatar in the UI here
+      toast.success("Avatar uploaded successfully!");
     } catch (error) {
       console.error("Error uploading avatar:", error);
+      toast.error("Error uploading avatar. Please try again.");
     }
   };
 
@@ -154,6 +170,7 @@ const UserProfile = () => {
 
   return (
     <div className="bg-green-50 min-h-screen font-urbanist">
+      <ToastContainer />
       <div className="container mx-auto py-12 px-4">
         <div className="bg-white rounded-xl shadow-lg p-8">
           <div className="border-b border-gray-200 pb-6 mb-6">
@@ -386,7 +403,8 @@ const UserProfile = () => {
               <h3 className="text-2xl font-semibold mb-4 text-gray-800">
                 My Bookmarks
               </h3>
-              {bookmarks.length > 0 ? (
+
+              {bookmarks && bookmarks.length > 0 ? (
                 <ul className="space-y-4">
                   {bookmarks.map((bookmark, index) => (
                     <li key={index} className="border-b border-gray-200 pb-4">
@@ -394,9 +412,8 @@ const UserProfile = () => {
                         {bookmark.title}
                       </h4>
                       <p className="text-gray-600">{bookmark.description}</p>
-
                       <Link
-                        to={bookmark.url}
+                        to={`/recipes/${bookmark.id}`}
                         className="text-customGreen hover:underline"
                       >
                         View Recipe
