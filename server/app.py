@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
@@ -26,6 +26,12 @@ from routes.admin import admin
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Configure upload folder
+app.config["UPLOAD_FOLDER"] = "uploads"
+
+# Ensure the upload folder exists
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 # Initialize extensions
 db.init_app(app)
@@ -71,6 +77,11 @@ def check_if_token_in_blacklist(jwt_header, jwt_payload):
 @app.route("/")
 def index():
     return "Welcome to the Taste-Tribe API"
+
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 
 if __name__ == "__main__":
