@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import api from "../api";
 
 import { FaXTwitter } from "react-icons/fa6";
 import {
   FaSearch,
   FaBookmark,
-  FaFacebook,
-  FaPinterest,
-  FaWhatsapp,
+  FaFacebookF,
   FaInstagram,
+  FaWhatsapp,
+  FaStar,
+  FaClock,
+  FaUtensils,
+  FaGlobeAmericas,
+  FaFilter,
+  FaExclamationCircle,
 } from "react-icons/fa";
 
-const dietType = [
+const dietTypes = [
   "All",
   "Vegan",
   "Dash",
@@ -22,14 +30,29 @@ const dietType = [
   "Gluten-Free",
 ];
 
+const extractMinutes = (prepTime) => {
+  const hourMatch = prepTime.match(/(\d+)\s*hour/);
+  const minuteMatch = prepTime.match(/(\d+)\s*min/);
+
+  let totalMinutes = 0;
+  if (hourMatch) totalMinutes += parseInt(hourMatch[1]) * 60;
+  if (minuteMatch) totalMinutes += parseInt(minuteMatch[1]);
+
+  return totalMinutes;
+};
+
 const ExploreRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [selectedDietType, setSelectedDietType] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("All");
-  const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
+  const [bookmarkedRecipes, setBookmarkedRecipes] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [ratingFilter, setRatingFilter] = useState(0);
+  const [servingsFilter, setServingsFilter] = useState("");
+  const [prepTimeFilter, setPrepTimeFilter] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +61,14 @@ const ExploreRecipes = () => {
         setLoading(true);
         const response = await api.get("/api/recipes");
         setRecipes(response.data);
+        const bookmarkStatuses = {};
+        for (const recipe of response.data) {
+          const bookmarkResponse = await api.get(
+            `/api/recipes/${recipe.id}/bookmark`
+          );
+          bookmarkStatuses[recipe.id] = bookmarkResponse.data.bookmarked;
+        }
+        setBookmarkedRecipes(bookmarkStatuses);
         setError(null);
       } catch (error) {
         console.error("Error fetching recipes:", error);
@@ -54,14 +85,38 @@ const ExploreRecipes = () => {
     fetchRecipes();
   }, [navigate]);
 
-  const filteredRecipes = recipes.filter(
-    (recipe) =>
-      (recipe.dietType === selectedDietType || selectedDietType === "All") &&
-      (recipe.countryOfOrigin === selectedCountry ||
-        selectedCountry === "All") &&
-      (recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        recipe.chefName.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredRecipes = recipes.filter((recipe) => {
+    const searchLower = searchTerm.toLowerCase();
+    const searchFields = [
+      recipe.title,
+      recipe.chefName,
+      recipe.countryOfOrigin,
+      recipe.dietType,
+      ...(Array.isArray(recipe.ingredients)
+        ? recipe.ingredients
+        : [recipe.ingredients]),
+      recipe.instructions,
+    ];
+    const matchesSearch = searchFields.some(
+      (field) =>
+        field &&
+        typeof field === "string" &&
+        field.toLowerCase().includes(searchLower)
+    );
+    const prepTimeMinutes = extractMinutes(recipe.prepTime);
+    const servingsFilterNumber = parseInt(servingsFilter) || 0;
+    const prepTimeFilterNumber = parseInt(prepTimeFilter) || 0;
+
+    return (
+      matchesSearch &&
+      (selectedDietType === "All" || recipe.dietType === selectedDietType) &&
+      (selectedCountry === "All" ||
+        recipe.countryOfOrigin === selectedCountry) &&
+      (ratingFilter === 0 || recipe.rating >= ratingFilter) &&
+      (servingsFilterNumber === 0 || recipe.servings >= servingsFilterNumber) &&
+      (prepTimeFilterNumber === 0 || prepTimeMinutes <= prepTimeFilterNumber)
+    );
+  });
 
   const countries = [
     "All",
@@ -91,65 +146,139 @@ const ExploreRecipes = () => {
     }
 
     window.open(shareUrl, "_blank");
+    toast.success(`Shared on ${platform}!`, {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   const toggleBookmark = async (recipeId) => {
     try {
-      if (bookmarkedRecipes.includes(recipeId)) {
-        await api.delete(`/api/bookmarks/${recipeId}`);
-        setBookmarkedRecipes(bookmarkedRecipes.filter((id) => id !== recipeId));
+      if (bookmarkedRecipes[recipeId]) {
+        await api.delete(`/api/recipes/${recipeId}/bookmark`);
+        setBookmarkedRecipes({ ...bookmarkedRecipes, [recipeId]: false });
+        toast.info("Recipe removed from bookmarks!", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        await api.post("/api/bookmarks", { recipeId });
-        setBookmarkedRecipes([...bookmarkedRecipes, recipeId]);
+        await api.post(`/api/recipes/${recipeId}/bookmark`);
+        setBookmarkedRecipes({ ...bookmarkedRecipes, [recipeId]: true });
+        toast.success("Recipe bookmarked!", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       console.error("Error toggling bookmark:", error);
+      toast.error("Failed to update bookmark. Please try again.", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen text-2xl font-semibold text-green-600">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex justify-center items-center h-screen text-2xl font-semibold text-green-600"
+      >
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-600 mr-4"></div>
         Loading...
-      </div>
+      </motion.div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-screen text-2xl font-semibold text-red-600">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex flex-col justify-center items-center h-screen text-2xl font-semibold text-red-600"
+      >
+        <FaExclamationCircle className="text-5xl mb-4" />
         {error}
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-b from-green-50 to-green-100 min-h-screen p-8 font-urbanist">
-      <h1 className="text-5xl font-extrabold text-center mb-12 text-green-800 tracking-wide">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="bg-gradient-to-b from-green-50 to-green-100 min-h-screen p-8 font-urbanist"
+    >
+      <ToastContainer />
+      <motion.h1
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="text-5xl font-extrabold text-center mb-12 text-green-800 tracking-wide"
+      >
         Explore Culinary Delights
-      </h1>
+      </motion.h1>
 
-      <div className="flex flex-wrap justify-center gap-4 mb-12">
-        {dietType.map((type) => (
-          <button
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="flex flex-wrap justify-center gap-4 mb-12"
+      >
+        {dietTypes.map((type, index) => (
+          <motion.button
             key={type}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
             className={`px-6 py-3 ${
               selectedDietType === type
                 ? "bg-green-600 text-white"
                 : "bg-white text-green-600"
-            } rounded-full shadow-lg transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 font-semibold text-lg`}
+            } rounded-full shadow-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 font-semibold text-lg`}
             onClick={() => setSelectedDietType(type)}
           >
             {type}
-          </button>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4"
+      >
         <div className="relative w-full md:w-2/3 lg:w-1/2">
           <input
             type="text"
-            placeholder="Search recipes or chefs..."
+            placeholder="Search recipes, chefs, ingredients..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-6 py-4 pl-12 pr-10 text-green-600 bg-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 text-lg"
@@ -161,6 +290,7 @@ const ExploreRecipes = () => {
             htmlFor="country-select"
             className="mr-4 text-green-700 font-semibold text-lg"
           >
+            <FaGlobeAmericas className="inline-block mr-2" />
             Select Country:
           </label>
           <select
@@ -176,94 +306,210 @@ const ExploreRecipes = () => {
             ))}
           </select>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {filteredRecipes.map((recipe) => (
-          <div
-            key={recipe.id}
-            className="transform transition duration-300 hover:scale-105 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full"
-          >
-            <div className="relative h-64">
-              <img
-                src={recipe.image}
-                alt={recipe.title}
-                className="w-full h-full object-cover"
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="mb-8"
+      >
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center justify-center w-full md:w-auto px-6 py-3 bg-green-600 text-white rounded-full shadow-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 font-semibold text-lg"
+        >
+          <FaFilter className="mr-2" />
+          {showFilters ? "Hide Filters" : "Show Filters"}
+        </button>
+        {showFilters && (
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-green-700 font-semibold mb-2">
+                Minimum Rating
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="5"
+                step="0.5"
+                value={ratingFilter}
+                onChange={(e) => setRatingFilter(parseFloat(e.target.value))}
+                className="w-full"
               />
-              <div className="absolute top-0 right-0 bg-green-600 text-white px-4 py-2 rounded-bl-2xl font-semibold">
-                {recipe.dietType}
-              </div>
+              <span>{ratingFilter} stars</span>
             </div>
-            <div className="p-6 flex-grow flex flex-col justify-between">
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-2xl font-bold text-green-800 truncate">
-                    {recipe.title}
-                  </h3>
-                  <FaBookmark
-                    className={`text-3xl cursor-pointer transition-colors duration-300 ${
-                      bookmarkedRecipes.includes(recipe.id)
-                        ? "text-blue-500 hover:text-blue-600"
-                        : "text-gray-400 hover:text-gray-600"
-                    }`}
-                    onClick={() => toggleBookmark(recipe.id)}
-                  />
-                </div>
-                <div className="flex items-center mb-4">
-                  <img
-                    src={recipe.chefImage}
-                    alt={recipe.chefName}
-                    className="w-12 h-12 rounded-full mr-3 border-2 border-green-500"
-                  />
-                  <span className="text-gray-700 font-medium truncate">
-                    {recipe.chefName}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-600 mb-4">
-                  <span>Prep Time: {recipe.prepTime}</span>
-                  <span>Servings: {recipe.servings}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-yellow-500 font-bold text-lg">
-                    ★ {recipe.rating}
-                  </span>
-                  <span className="text-green-600 font-semibold">
-                    {recipe.countryOfOrigin}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <Link
-                  to={`/recipes/${recipe.id}`}
-                  className="mt-6 block w-full text-center bg-green-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 text-lg"
-                >
-                  View Recipe
-                </Link>
-
-                <div className="mt-4 flex justify-center space-x-6">
-                  <FaFacebook
-                    className="text-blue-600 cursor-pointer text-3xl hover:text-blue-800 transition-colors duration-300"
-                    onClick={() => shareOnSocialMedia("facebook", recipe)}
-                  />
-                  <FaXTwitter
-                    className="text-black cursor-pointer text-3xl hover:text-blue-600 transition-colors duration-300"
-                    onClick={() => shareOnSocialMedia("twitter", recipe)}
-                  />
-                  <FaInstagram
-                    className="text-pink-600 cursor-pointer text-3xl hover:text-pink-800 transition-colors duration-300"
-                    onClick={() => shareOnSocialMedia("instagram", recipe)}
-                  />
-                  <FaWhatsapp
-                    className="text-green-500 cursor-pointer text-3xl hover:text-green-700 transition-colors duration-300"
-                    onClick={() => shareOnSocialMedia("whatsapp", recipe)}
-                  />
-                </div>
-              </div>
+            <div>
+              <label className="block text-green-700 font-semibold mb-2">
+                Minimum Servings
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={servingsFilter}
+                onChange={(e) => setServingsFilter(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-green-700 font-semibold mb-2">
+                Maximum Prep Time (minutes)
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={prepTimeFilter}
+                onChange={(e) => setPrepTimeFilter(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md"
+              />
             </div>
           </div>
-        ))}
-      </div>
-    </div>
+        )}
+      </motion.div>
+
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+        >
+          {filteredRecipes.map((recipe, index) => (
+            <motion.div
+              key={recipe.id}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full transform transition duration-300 hover:scale-105"
+            >
+              <div className="relative h-64">
+                <img
+                  src={recipe.image}
+                  alt={recipe.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-0 right-0 bg-green-600 text-white px-4 py-2 rounded-bl-2xl font-semibold">
+                  {recipe.dietType}
+                </div>
+              </div>
+              <div className="p-6 flex-grow flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-2xl font-bold text-green-800 truncate">
+                      {recipe.title}
+                    </h3>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => toggleBookmark(recipe.id)}
+                      className={`${
+                        bookmarkedRecipes[recipe.id]
+                          ? "text-blue-500"
+                          : "text-gray-400"
+                      } group relative hover:text-blue-600 transition-colors duration-200`}
+                    >
+                      <FaBookmark className="text-3xl" />
+                      <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        {bookmarkedRecipes[recipe.id]
+                          ? "Bookmarked"
+                          : "Bookmark"}
+                      </span>
+                    </motion.button>
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <img
+                      src={recipe.chefImage}
+                      alt={recipe.chefName}
+                      className="w-12 h-12 rounded-full mr-3 border-2 border-green-500"
+                    />
+                    <span className="text-gray-700 font-medium truncate">
+                      {recipe.chefName}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-600 mb-4">
+                    <span className="flex items-center">
+                      <FaClock className="mr-1 text-green-500" />{" "}
+                      {recipe.prepTime}
+                    </span>
+                    <span className="flex items-center">
+                      <FaUtensils className="mr-1 text-green-500" /> Servings:{" "}
+                      {recipe.servings}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-yellow-500 font-bold text-lg flex items-center">
+                      <FaStar className="mr-1" /> {recipe.rating.toFixed(1)}
+                    </span>
+                    <span className="text-green-600 font-semibold flex items-center">
+                      <FaGlobeAmericas className="mr-1" />{" "}
+                      {recipe.countryOfOrigin}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <Link
+                    to={`/recipes/${recipe.id}`}
+                    className="mt-6 block w-full text-center bg-green-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 text-lg"
+                  >
+                    View Recipe
+                  </Link>
+
+                  <div className="mt-4 flex justify-center space-x-6">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => shareOnSocialMedia("facebook", recipe)}
+                      className="text-blue-600 cursor-pointer text-3xl hover:text-blue-800 transition-colors duration-300"
+                    >
+                      <FaFacebookF />
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => shareOnSocialMedia("twitter", recipe)}
+                      className="text-black cursor-pointer text-3xl hover:text-blue-600 transition-colors duration-300"
+                    >
+                      <FaXTwitter />
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => shareOnSocialMedia("instagram", recipe)}
+                      className="text-pink-600 cursor-pointer text-3xl hover:text-pink-800 transition-colors duration-300"
+                    >
+                      <FaInstagram />
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => shareOnSocialMedia("whatsapp", recipe)}
+                      className="text-green-500 cursor-pointer text-3xl hover:text-green-700 transition-colors duration-300"
+                    >
+                      <FaWhatsapp />
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
+      {filteredRecipes.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mt-12"
+        >
+          <p className="text-2xl font-semibold text-gray-600">
+            No recipes found.
+          </p>
+          <p className="text-lg text-gray-500 mt-2">
+            Try adjusting your search or filters.
+          </p>
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 
