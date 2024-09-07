@@ -1,12 +1,12 @@
 import React from "react";
 import ExploreRecipes from "../../components/ExploreRecipes";
-import FeaturedRecipe from "../../components/FeaturedRecipe";
+import FeaturedRecipes from "../../components/FeaturedRecipes";
 
 const Recipes = () => {
   return (
     <div>
       <div>
-        <FeaturedRecipe />
+        <FeaturedRecipes />
       </div>
       <div>
         <ExploreRecipes />

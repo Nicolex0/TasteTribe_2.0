@@ -9,7 +9,7 @@ recipes_schema = RecipeSchema(many=True)
 
 
 @recipes.route("", methods=["GET"])
-@jwt_required()
+# @jwt_required()
 def get_recipes():
     diet_type = request.args.get("dietType")
     if diet_type:
@@ -59,6 +59,21 @@ def create_recipe():
 @jwt_required()
 def update_recipe(id):
     recipe = Recipe.query.get_or_404(id)
+    data = request.get_json()
+
+    recipe.chefName = data.get("chefName", recipe.chefName)
+    recipe.chefImage = data.get("chefImage", recipe.chefImage)
+    recipe.title = data.get("title", recipe.title)
+    recipe.image = data.get("image", recipe.image)
+    recipe.ingredients = data.get("ingredients", recipe.ingredients)
+    recipe.instructions = data.get("instructions", recipe.instructions)
+    recipe.url = data.get("url", recipe.url)
+    recipe.moreInfoUrl = data.get("moreInfoUrl", recipe.moreInfoUrl)
+    recipe.rating = data.get("rating", recipe.rating)
+    recipe.prepTime = data.get("prepTime", recipe.prepTime)
+    recipe.servings = data.get("servings", recipe.servings)
+    recipe.countryOfOrigin = data.get("countryOfOrigin", recipe.countryOfOrigin)
+    recipe.dietType = data.get("dietType", recipe.dietType)
     data = request.json
 
     try:
@@ -138,3 +153,14 @@ def get_bookmarked_recipes():
         Recipe.query.join(Bookmark).filter(Bookmark.userId == current_user.id).all()
     )
     return jsonify(recipes_schema.dump(bookmarked_recipes)), 200
+
+
+@recipes.route("/<int:id>/bookmark", methods=["GET"])
+@jwt_required()
+def get_bookmark_by_id(id):
+    current_user = User.query.get(get_jwt_identity())
+    bookmark = Bookmark.query.filter_by(userId=current_user.id, recipeId=id).first()
+    if bookmark:
+        return jsonify({"bookmarked": True}), 200
+    else:
+        return jsonify({"bookmarked": False}), 200

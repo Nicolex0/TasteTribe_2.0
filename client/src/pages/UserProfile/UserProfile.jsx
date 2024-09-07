@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import api from '../../api';
+import { useNavigate, Link } from "react-router-dom";
+import api from "../../api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserProfile = () => {
   const [file, setFile] = useState(null);
@@ -13,17 +15,21 @@ const UserProfile = () => {
   const [title, setTitle] = useState("");
   const [email, setEmail] = useState("");
   const [aboutMe, setAboutMe] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
   const [recipes, setRecipes] = useState(0);
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
+  const [previewImage, setPreviewImage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const userResponse = await api.get('/api/users/current');
+        const userResponse = await api.get("/api/users/current", {
+          withCredentials: true,
+        });
         const userData = userResponse.data;
         setUserId(userData.id);
         setFirstName(userData.firstName || "");
@@ -31,6 +37,7 @@ const UserProfile = () => {
         setTitle(userData.title || "");
         setEmail(userData.email || "");
         setAboutMe(userData.aboutMe || "");
+        setProfilePicture(userData.profilePicture || "");
 
         await fetchNotifications();
         await fetchBookmarks();
@@ -48,7 +55,9 @@ const UserProfile = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await api.get("/api/notifications");
+      const response = await api.get("/api/notifications", {
+        withCredentials: true,
+      });
       setNotifications(response.data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -57,7 +66,9 @@ const UserProfile = () => {
 
   const fetchBookmarks = async () => {
     try {
-      const response = await api.get("/api/bookmarks");
+      const response = await api.get("/api/recipes/bookmarked", {
+        withCredentials: true,
+      });
       setBookmarks(response.data);
     } catch (error) {
       console.error("Error fetching bookmarks:", error);
@@ -66,7 +77,9 @@ const UserProfile = () => {
 
   const fetchUserStats = async () => {
     try {
-      const response = await api.get("/api/user-stats");
+      const response = await api.get("/api/user-stats", {
+        withCredentials: true,
+      });
       const data = response.data;
       setRecipes(data.recipes);
       setFollowers(data.followers);
@@ -77,7 +90,9 @@ const UserProfile = () => {
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    setPreviewImage(URL.createObjectURL(selectedFile));
   };
 
   const handleUploadClick = () => {
@@ -85,7 +100,7 @@ const UserProfile = () => {
   };
 
   const handleExploreRecipesClick = () => {
-    navigate("/api/recipes");
+    navigate("/recipes");
   };
 
   const handleInputChange = (e) => {
@@ -114,18 +129,22 @@ const UserProfile = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.put(`/api/users/${userId}`, {
-        firstName,
-        lastName,
-        title,
-        email,
-        aboutMe
-      });
+      const response = await api.put(
+        `/api/users/${userId}`,
+        {
+          firstName,
+          lastName,
+          title,
+          email,
+          aboutMe,
+        },
+        { withCredentials: true }
+      );
       console.log("Profile updated successfully", response.data);
-      // You might want to show a success message to the user here
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      // You might want to show an error message to the user here
+      toast.error("Error updating profile. Please try again.");
     }
   };
 
@@ -133,18 +152,28 @@ const UserProfile = () => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('avatar', file);
+    formData.append("avatar", file);
 
     try {
-      const response = await api.post('/api/users/avatar', formData, {
+      const response = await api.post("/api/users/avatar", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
       });
       console.log("Avatar uploaded successfully", response.data);
-      // You might want to update the user's avatar in the UI here
+
+      // Update the profilePicture state with the full URL
+      setProfilePicture(response.data.profilePicture);
+
+      // Clear the file and previewImage states
+      setFile(null);
+      setPreviewImage(null);
+
+      toast.success("Avatar uploaded successfully!");
     } catch (error) {
       console.error("Error uploading avatar:", error);
+      toast.error("Error uploading avatar. Please try again.");
     }
   };
 
@@ -154,6 +183,7 @@ const UserProfile = () => {
 
   return (
     <div className="bg-green-50 min-h-screen font-urbanist">
+      <ToastContainer />
       <div className="container mx-auto py-12 px-4">
         <div className="bg-white rounded-xl shadow-lg p-8">
           <div className="border-b border-gray-200 pb-6 mb-6">
@@ -203,9 +233,9 @@ const UserProfile = () => {
                 <div className="flex flex-col items-center">
                   <img
                     src={
-                      file
-                        ? URL.createObjectURL(file)
-                        : "https://via.placeholder.com/150"
+                      previewImage ||
+                      profilePicture ||
+                      "https://via.placeholder.com/150"
                     }
                     alt="Avatar"
                     className="w-32 h-32 rounded-full border-4 border-green-100 shadow-md"
@@ -373,57 +403,57 @@ const UserProfile = () => {
                   <button
                     onClick={handleExploreRecipesClick}
                     className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-950 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                    >
-                      Explore Recipes
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-  
-            {activeTab === "bookmarks" && (
-              <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-auto">
-                <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-                  My Bookmarks
-                </h3>
-                {bookmarks.length > 0 ? (
-                  <ul className="space-y-4">
-                    {bookmarks.map((bookmark, index) => (
-                      <li key={index} className="border-b border-gray-200 pb-4">
-                        <h4 className="text-lg font-semibold text-gray-800">
-                          {bookmark.title}
-                        </h4>
-                        <p className="text-gray-600">{bookmark.description}</p>
-                        <a
-                          href={bookmark.url}
-                          className="text-customGreen hover:underline"
-                        >
-                          View Recipe
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="text-center">
-                    <p className="mb-6 text-gray-600">
-                      You haven't bookmarked any recipes yet. Start exploring and
-                      save your favorite recipes here!
-                    </p>
-                    <button
-                      onClick={handleExploreRecipesClick}
-                      className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-950 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                    >
-                      Discover Recipes
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                  >
+                    Explore Recipes
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "bookmarks" && (
+            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-auto">
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">
+                My Bookmarks
+              </h3>
+
+              {bookmarks && bookmarks.length > 0 ? (
+                <ul className="space-y-4">
+                  {bookmarks.map((bookmark, index) => (
+                    <li key={index} className="border-b border-gray-200 pb-4">
+                      <h4 className="text-lg font-semibold text-gray-800">
+                        {bookmark.title}
+                      </h4>
+                      <p className="text-gray-600">{bookmark.description}</p>
+                      <Link
+                        to={`/recipes/${bookmark.id}`}
+                        className="text-customGreen hover:underline"
+                      >
+                        View Recipe
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="text-center">
+                  <p className="mb-6 text-gray-600">
+                    You haven't bookmarked any recipes yet. Start exploring and
+                    save your favorite recipes here!
+                  </p>
+                  <button
+                    onClick={handleExploreRecipesClick}
+                    className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-950 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                  >
+                    Discover Recipes
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
-    );
-  };
-  
-  export default UserProfile;
-  
+    </div>
+  );
+};
+
+export default UserProfile;

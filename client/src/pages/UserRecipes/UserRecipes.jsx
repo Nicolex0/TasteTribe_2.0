@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import api from "../../api";
-import UserRecipeCard from "../../components/UserRecipeCard";
+import UserRecipesCard from "../../components/UserRecipesCard";
 
 // Initial state for a new recipe
 const initialRecipeState = {
@@ -25,7 +27,7 @@ const UserRecipes = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [newRecipe, setNewRecipe] = useState(initialRecipeState);
-  const [error, setError] = useState(null); // New state for error handling
+  const [error, setError] = useState(null);
 
   const fetchRecipes = useCallback(async () => {
     try {
@@ -37,7 +39,7 @@ const UserRecipes = () => {
       setBookmarkedRecipes(bookmarked.data);
     } catch (error) {
       console.error("Error fetching recipes:", error);
-      setError("Failed to fetch recipes. Please try again later."); // User-friendly error message
+      setError("Failed to fetch recipes. Please try again later.");
     }
   }, []);
 
@@ -59,7 +61,6 @@ const UserRecipes = () => {
     const submittedRecipe = {
       ...newRecipe,
       rating: parseFloat(newRecipe.rating) || 0,
-      // Ensure ingredients and instructions are strings
       ingredients:
         typeof newRecipe.ingredients === "string"
           ? newRecipe.ingredients
@@ -72,33 +73,41 @@ const UserRecipes = () => {
 
     try {
       if (editingRecipe) {
-        const confirmUpdate = window.confirm(
-          `Are you sure you want to update the recipe "${editingRecipe.title}"? This action cannot be undone.`
+        // Check if any changes were made
+        const hasChanges = Object.keys(submittedRecipe).some(
+          (key) => submittedRecipe[key] !== editingRecipe[key]
         );
-        if (confirmUpdate) {
-          const { data } = await api.put(
-            `/api/recipes/${editingRecipe.id}`,
-            submittedRecipe
-          );
-          setRecipes((prevRecipes) =>
-            prevRecipes.map((recipe) =>
-              recipe.id === editingRecipe.id ? data : recipe
-            )
-          );
-          setNewRecipe(initialRecipeState);
+
+        if (!hasChanges) {
+          toast.info("No changes were made to the recipe.");
           setShowForm(false);
           setEditingRecipe(null);
+          return;
         }
+
+        const { data } = await api.put(
+          `/api/recipes/${editingRecipe.id}`,
+          submittedRecipe
+        );
+        setRecipes((prevRecipes) =>
+          prevRecipes.map((recipe) =>
+            recipe.id === editingRecipe.id ? data : recipe
+          )
+        );
+        toast.success(`Recipe "${data.title}" updated successfully!`);
       } else {
         const { data } = await api.post("/api/recipes", submittedRecipe);
         setRecipes((prevRecipes) => [...prevRecipes, data]);
-        setNewRecipe(initialRecipeState);
-        setShowForm(false);
+        toast.success(`New recipe "${data.title}" created successfully!`);
       }
-      setError(null); // Clear any previous errors
+      setNewRecipe(initialRecipeState);
+      setShowForm(false);
+      setEditingRecipe(null);
+      setError(null);
     } catch (error) {
       console.error("Error submitting recipe:", error);
-      setError("Failed to save the recipe. Please try again."); // User-friendly error message
+      setError("Failed to save the recipe. Please try again.");
+      toast.error("Failed to save the recipe. Please try again.");
     }
   };
 
@@ -119,43 +128,37 @@ const UserRecipes = () => {
   }, []);
 
   const handleDelete = useCallback(async (id, title) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete the recipe "${title}"? This action cannot be undone.`
-    );
-    if (confirmDelete) {
-      try {
-        await api.delete(`/api/recipes/${id}`);
-        setRecipes((prevRecipes) =>
-          prevRecipes.filter((recipe) => recipe.id !== id)
-        );
-        setError(null); // Clear any previous errors
-      } catch (error) {
-        console.error("Error deleting recipe:", error);
-        setError("Failed to delete the recipe. Please try again."); // User-friendly error message
-      }
+    try {
+      await api.delete(`/api/recipes/${id}`);
+      setRecipes((prevRecipes) =>
+        prevRecipes.filter((recipe) => recipe.id !== id)
+      );
+      toast.success(`Recipe "${title}" deleted successfully!`);
+      setError(null);
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+      setError("Failed to delete the recipe. Please try again.");
+      toast.error("Failed to delete the recipe. Please try again.");
     }
   }, []);
 
   const handleRemoveBookmark = useCallback(async (id, title) => {
-    const confirmRemove = window.confirm(
-      `Are you sure you want to remove the bookmark for "${title}"?`
-    );
-    if (confirmRemove) {
-      try {
-        await api.delete(`/api/recipes/${id}/bookmark`, {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setBookmarkedRecipes((prevBookmarks) =>
-          prevBookmarks.filter((recipe) => recipe.id !== id)
-        );
-        setError(null); // Clear any previous errors
-      } catch (error) {
-        console.error("Error removing bookmark:", error);
-        setError("Failed to remove the bookmark. Please try again."); // User-friendly error message
-      }
+    try {
+      await api.delete(`/api/recipes/${id}/bookmark`, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setBookmarkedRecipes((prevBookmarks) =>
+        prevBookmarks.filter((recipe) => recipe.id !== id)
+      );
+      toast.success(`Bookmark for "${title}" removed successfully!`);
+      setError(null);
+    } catch (error) {
+      console.error("Error removing bookmark:", error);
+      setError("Failed to remove the bookmark. Please try again.");
+      toast.error("Failed to remove the bookmark. Please try again.");
     }
   }, []);
 
@@ -166,10 +169,10 @@ const UserRecipes = () => {
         setEditingRecipe(null);
       }
     };
-    window.addEventListener("keydown", handleEsc);
+    document.addEventListener("keydown", handleEsc);
 
     return () => {
-      window.removeEventListener("keydown", handleEsc);
+      document.removeEventListener("keydown", handleEsc);
     };
   }, []);
 
@@ -178,13 +181,13 @@ const UserRecipes = () => {
       className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50"
       id="recipe-modal"
     >
-      <div className="relative top-20 mx-auto p-8 border w-11/12 md:w-3/4 lg:w-1/2 shadow-2xl rounded-lg bg-white">
-        <h2 className="text-3xl font-bold mb-6 text-[#33665A] text-center">
+      <div className="relative top-20 mx-auto p-4 md:p-8 border w-11/12 md:w-3/4 lg:w-1/2 shadow-2xl rounded-lg bg-white max-h-[80vh] overflow-y-auto">
+        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-[#33665A] text-center tracking-wide">
           {editingRecipe
             ? "Edit Your Recipe"
             : "Create a New Culinary Masterpiece"}
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
           {[
             {
               label: "Recipe Title",
@@ -308,7 +311,7 @@ const UserRecipes = () => {
               )}
             </div>
           ))}
-          <div className="flex justify-end space-x-4 mt-8">
+          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4 mt-8">
             <button
               type="button"
               onClick={() => {
@@ -334,7 +337,18 @@ const UserRecipes = () => {
   return (
     <div className="bg-gradient-to-r from-green-50 to-blue-50 min-h-screen">
       <div className="container mx-auto px-4 py-12 font-urbanist">
-        {error && ( // Display error message if there's an error
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        {error && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
             role="alert"
@@ -343,23 +357,24 @@ const UserRecipes = () => {
             <span className="block sm:inline">{error}</span>
           </div>
         )}
-        <h2 className="text-4xl font-extrabold mb-8 text-[#33665A] text-center tracking-wide">
+        <h2 className="text-3xl md:text-4xl font-extrabold mb-8 text-[#33665A] text-center tracking-wide">
           Your Culinary Creations
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {recipes.map((recipe) => (
             <div key={recipe.id} className="flex flex-col">
               <div className="relative transform transition duration-300 hover:scale-105">
-                <UserRecipeCard recipe={recipe} />
+                <UserRecipesCard recipe={recipe} />
               </div>
-              <div className="mt-4 flex justify-center space-x-3">
+              <div className="mt-4 flex justify-center space-x-4">
                 <button
                   onClick={() => handleEdit(recipe)}
-                  className="bg-green-900 hover:bg-green-950 text-white font-bold p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-300 ease-in-out group relative"
+                  className="bg-green-900 hover:bg-green-950 text-white font-bold p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-300 ease-in-out group relative"
+                  aria-label="Edit recipe"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
+                    className="h-5 w-5"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -370,17 +385,18 @@ const UserRecipes = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-1/2 transform -translate-x-1/2">
-                    Edit
+                  <span className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                    Edit Recipe
                   </span>
                 </button>
                 <button
                   onClick={() => handleDelete(recipe.id, recipe.title)}
-                  className="bg-red-700 hover:bg-red-800 text-white font-bold p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50 transition duration-300 ease-in-out group relative"
+                  className="bg-red-700 hover:bg-red-800 text-white font-bold p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50 transition duration-300 ease-in-out group relative"
+                  aria-label="Delete recipe"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
+                    className="h-5 w-5"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -390,8 +406,8 @@ const UserRecipes = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-1/2 transform -translate-x-1/2">
-                    Delete
+                  <span className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs rounded py-1 px-2 -top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                    Delete Recipe
                   </span>
                 </button>
               </div>
@@ -399,14 +415,14 @@ const UserRecipes = () => {
           ))}
         </div>
 
-        <h2 className="text-4xl font-extrabold mt-12 mb-8 text-[#33665A] text-center tracking-wide">
+        <h2 className="text-3xl md:text-4xl font-extrabold mt-12 mb-8 text-[#33665A] text-center tracking-wide">
           Bookmarked Recipes
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
           {bookmarkedRecipes.map((recipe) => (
             <div key={recipe.id} className="flex flex-col">
               <div className="relative transform transition duration-300 hover:scale-105">
-                <UserRecipeCard recipe={recipe} />
+                <UserRecipesCard recipe={recipe} />
               </div>
               <div className="mt-4 flex justify-center">
                 <button

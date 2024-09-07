@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import {
   FaBookmark,
   FaClock,
@@ -11,24 +13,82 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom';
+import api from "../api";
 
-const RecipeCard = ({ recipe }) => {
+const FeaturedRecipesCard = ({ recipe }) => {
   const [liked, setLiked] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBookmarkStatus = async () => {
+      try {
+        const response = await api.get(`/api/recipes/${recipe.id}/bookmark`);
+        setIsBookmarked(response.data.bookmarked);
+      } catch (error) {
+        console.error("Error fetching bookmark status:", error);
+      }
+    };
+    fetchBookmarkStatus();
+  }, [recipe.id]);
 
   const toggleLike = (e) => {
     e.preventDefault();
     setLiked(!liked);
+    toast.success(liked ? "Recipe unliked!" : "Recipe liked!", {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
-  const toggleBookmark = (e) => {
+
+  const toggleBookmark = async (e) => {
     e.preventDefault();
-    setBookmarked(!bookmarked);
+    try {
+      if (isBookmarked) {
+        await api.delete(`/api/recipes/${recipe.id}/bookmark`);
+        toast.info("Recipe removed from bookmarks!", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        await api.post(`/api/recipes/${recipe.id}/bookmark`);
+        toast.success("Recipe bookmarked!", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error("Error toggling bookmark:", error);
+      toast.error("Failed to update bookmark. Please try again.", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
 
   const handleCommentClick = () => {
-    navigate(`/recipe-info/${recipe.id}`);
+    navigate(`/recipes/${recipe.id}`);
   };
 
   const handleShare = (platform) => {
@@ -57,6 +117,15 @@ const RecipeCard = ({ recipe }) => {
     }
     if (shareUrl) {
       window.open(shareUrl, "_blank", "noopener,noreferrer");
+      toast.info(`Shared on ${platform}!`, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -89,127 +158,153 @@ const RecipeCard = ({ recipe }) => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-2xl p-8 flex flex-col h-full relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border border-green-200 hover:border-green-300 w-full max-w-3xl mx-auto">
-      <div className="flex items-center space-x-4 mb-6">
-        <img
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 flex flex-col h-full w-full relative transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-105 border-2 border-green-300 hover:border-green-400"
+    >
+      <div className="flex items-center space-x-4 mb-4">
+        <motion.img
+          whileHover={{ scale: 1.1 }}
           src={recipe.chefImage}
           alt="Chef"
-          className="w-16 h-16 rounded-full border-2 border-green-400 shadow-md"
+          className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-4 border-green-400 shadow-lg"
         />
-        <div>
-          <h1 className="text-2xl font-bold text-green-800">{recipe.title}</h1>
-          <p className="text-sm text-green-600">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-green-800 truncate">
+            {recipe.title}
+          </h1>
+          <p className="text-xs sm:text-sm text-green-600 truncate">
             by <span className="font-semibold">{recipe.chefName}</span>
           </p>
         </div>
       </div>
 
-      <div className="mb-6 relative overflow-hidden rounded-xl">
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        className="mb-4 relative overflow-hidden rounded-2xl"
+      >
         <img
           src={recipe.image}
           alt="Recipe"
-          className="w-full h-56 object-cover shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+          className="w-full h-48 sm:h-56 md:h-64 object-cover shadow-xl transition-transform duration-300 ease-in-out hover:scale-110"
         />
-        <div className="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full px-3 py-1 text-sm font-semibold text-green-700">
+        <div className="absolute top-2 right-2 bg-white bg-opacity-90 rounded-full px-2 py-1 text-xs sm:text-sm font-semibold text-green-700 shadow-md">
           <FaClock className="inline mr-1" /> {recipe.prepTime}
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mb-6 text-sm text-grey space-y-3 flex-grow overflow-y-auto">
+      <div className="mb-4 text-xs sm:text-sm text-gray-700 space-y-2 flex-grow overflow-y-auto max-h-32 sm:max-h-40 md:max-h-48 pr-2 custom-scrollbar">
         <p className="flex justify-between">
-          <span className="font-semibold">Diet Type:</span> {recipe.dietType}
+          <span className="font-semibold text-green-700">Diet Type:</span>{" "}
+          {recipe.dietType}
         </p>
         <p className="flex justify-between">
-          <span className="font-semibold">Servings:</span> {recipe.servings}
+          <span className="font-semibold text-green-700">Servings:</span>{" "}
+          {recipe.servings}
         </p>
         <p className="flex justify-between">
-          <span className="font-semibold">Country of Origin:</span>{" "}
+          <span className="font-semibold text-green-700">
+            Country of Origin:
+          </span>{" "}
           {recipe.countryOfOrigin}
         </p>
         <p>
-          <span className="font-semibold">Ingredients:</span>{" "}
+          <span className="font-semibold text-green-700">Ingredients:</span>{" "}
           {recipe.ingredients}
         </p>
         <p>
-          <span className="font-semibold">Instructions:</span>{" "}
+          <span className="font-semibold text-green-700">Instructions:</span>{" "}
           {recipe.instructions}
         </p>
-
-        <button
-          onClick={() => navigate(`/recipeinfo/${recipe.id}`)}
-          className="text-green-500 hover:text-green-600 text-xs block mt-2 underline"
-        >
-          View More Recipe Info
-        </button>
       </div>
 
-      <div className="flex items-center justify-between mb-6 bg-green-50 p-3 rounded-lg">
-        <button
+      <Link
+        to={`/recipes/${recipe.id}`}
+        className="text-green-600 hover:text-green-700 text-xs sm:text-sm block mb-3 underline font-semibold transition-colors duration-200"
+      >
+        See More Recipe Details
+      </Link>
+
+      <div className="flex items-center justify-between mb-4 bg-green-100 p-2 sm:p-3 rounded-xl text-xs sm:text-sm shadow-inner">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={toggleLike}
-          className={`flex items-center space-x-2 ${
-            liked ? "text-red-500" : "text-gray-500"
+          className={`flex items-center space-x-1 ${
+            liked ? "text-red-500" : "text-gray-600"
           } hover:text-red-600 transition-colors duration-200`}
         >
-          <FaHeart className="text-xl" />
-          <span>{liked ? "Liked" : "Like"}</span>
-        </button>
+          <FaHeart className="text-lg" />
+          <span className="hidden sm:inline">{liked ? "Liked" : "Like"}</span>
+        </motion.button>
         <div className="flex items-center space-x-1">
           <div className="flex">{renderStars(recipe.rating)}</div>
           <span className="font-semibold">{recipe.rating.toFixed(1)}</span>
-          <span className="text-gray-500">
-            ({recipe.numberOfRatings} ratings)
-          </span>
         </div>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={toggleBookmark}
           className={`${
-            bookmarked ? "text-blue-500" : "text-gray-500"
+            isBookmarked ? "text-blue-500" : "text-gray-600"
           } group relative hover:text-blue-600 transition-colors duration-200`}
         >
-          <FaBookmark className="text-xl" />
-          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            {bookmarked ? "Bookmarked" : "Bookmark"}
+          <FaBookmark className="text-lg" />
+          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            {isBookmarked ? "Bookmarked" : "Bookmark"}
           </span>
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={handleCommentClick}
-          className="text-gray-500 hover:text-green-600 transition-colors duration-200 group relative"
+          className="text-gray-600 hover:text-green-600 transition-colors duration-200 group relative"
         >
-          <FaComment className="text-xl" />
-          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <FaComment className="text-lg" />
+          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             Comment
           </span>
-        </button>
+        </motion.button>
       </div>
 
-      <div className="absolute bottom-4 right-4 flex space-x-4">
-        <button
+      <div className="flex flex-wrap justify-end gap-3">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => handleShare("facebook")}
           className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
         >
           <FaFacebookF className="text-xl" />
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => handleShare("twitter")}
           className="text-black hover:text-gray-700 transition-colors duration-200"
         >
           <FaXTwitter className="text-xl" />
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => handleShare("instagram")}
           className="text-pink-600 hover:text-pink-800 transition-colors duration-200"
         >
           <FaInstagram className="text-xl" />
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => handleShare("whatsapp")}
           className="text-green-600 hover:text-green-800 transition-colors duration-200"
         >
           <FaWhatsapp className="text-xl" />
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-export default RecipeCard;
+export default FeaturedRecipesCard;
