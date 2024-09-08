@@ -197,16 +197,15 @@ TasteTribe_2.0
 
 ### Frontend Setup
 
-1. Open another terminal
+1. Open another terminal.
 
-2. Navigate to the frontend directory
+2. Navigate to the frontend directory:
 
     ```sh
     cd TasteTribe_2.0/client
     ```
 
-3. Ensure you are using nodejs v20.16.0. Use the Node Version Manager. If you don't have the version manager and/or    
-    the nodejs version, install them for the front end to run smoothly
+3. Ensure you are using nodejs v20.16.0. Use the Node Version Manager. If you don't have the version manager and/or the nodejs version, install them for the front-end to run smoothly:
 
     ```sh
     nvm use 20.16.0
