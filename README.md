@@ -160,7 +160,7 @@ TasteTribe_2.0
     git clone git@github.com:Nicolex0/TasteTribe_2.0.git
     ```
 
-2. Navigate to the project directory
+2. Navigate to the project directory:
 
     ```sh
     cd TasteTribe_2.0
