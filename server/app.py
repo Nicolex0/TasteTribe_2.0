@@ -46,8 +46,8 @@ CORS(
         r"/*": {
             "origins": [
                 "http://localhost:3000",
-                "https://taste-tribe-2-0-yvgd.vercel.app",
-                "https://tastetribe-2-0-main-final.onrender.com",
+                "https://tastetribefoodie.vercel.app",
+                "https://tastetribe-2-0-wmre.onrender.com",
             ]
         }
     },
