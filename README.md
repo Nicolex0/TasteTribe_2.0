@@ -26,102 +26,103 @@ TasteTribe addresses this problem by offering a dedicated platform for discoveri
 
 ```
 TasteTribe_2.0
-├── Pipfile
-├── Pipfile.lock
-├── .gitignore
-├── README.md
-├── client
-│   ├── README.md
-│   ├── .gitignore
-│   ├── db.json
-│   ├── eslint.config.js
-│   ├── index.html
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── postcss.config.js
-│   ├── public
-│   │   └── vite.svg
-│   ├── src
-│   │   ├── App.css
-│   │   ├── App.jsx
-│   │   ├── api.jsx
-│   │   ├── assets
-│   │   │   └── react.svg
-│   │   ├── components
-│   │   │   ├── ExploreRecipes.jsx
-│   │   │   ├── FeaturedRecipes.jsx
-│   │   │   ├── FeaturedRecipesCard.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── NavBar.jsx
-│   │   │   └── UserRecipesCard.jsx
-│   │   ├── hooks
-│   │   │   └── useAuth.js
-│   │   ├── index.css
-│   │   ├── main.jsx
-│   │   ├── pages
-│   │   │   ├── AboutUs
+├── 📄 Pipfile
+├── 🔒 Pipfile.lock
+├── 👁️ .gitignore
+├── 📚 README.md
+├── 🖥️ client
+│   ├── 📚 README.md
+│   ├── 👁️ .gitignore
+│   ├── 🗃️ db.json
+│   ├── 🧹 eslint.config.js
+│   ├── 🌐 index.html
+│   ├── 🔒 package-lock.json
+│   ├── 📦 package.json
+│   ├── 🎨 postcss.config.js
+│   ├── 🌐 public
+│   │   └── 🖼️ vite.svg
+│   ├── 🧠 src
+│   │   ├── 🎨 App.css
+│   │   ├── ⚛️ App.jsx
+│   │   ├── 🔌 api.jsx
+│   │   ├── 🖼️ assets
+│   │   │   └── ⚛️ react.svg
+│   │   ├── 🧩 components
+│   │   │   ├── 🔍 ExploreRecipes.jsx
+│   │   │   ├── 🌟 FeaturedRecipes.jsx
+│   │   │   ├── 🃏 FeaturedRecipesCard.jsx
+│   │   │   ├── 👣 Footer.jsx
+│   │   │   ├── 🧭 NavBar.jsx
+│   │   │   └── 👤 UserRecipesCard.jsx
+│   │   ├── 🎣 hooks
+│   │   │   └── 🔐 useAuth.js
+│   │   ├── 🎨 index.css
+│   │   ├── 🚀 main.jsx
+│   │   ├── 📄 pages
+│   │   │   ├── 👥 AboutUs
 │   │   │   │   └── AboutUs.jsx
-│   │   │   ├── Admin
+│   │   │   ├── 👑 Admin
 │   │   │   │   ├── AdminDashboard.jsx
 │   │   │   │   └── AdminSignIn.jsx
-│   │   │   ├── ContactUs
+│   │   │   ├── 📞 ContactUs
 │   │   │   │   └── ContactUs.jsx
-│   │   │   ├── ErrorPage
+│   │   │   ├── ❌ ErrorPage
 │   │   │   │   └── ErrorPage.jsx
-│   │   │   ├── Home
+│   │   │   ├── 🏠 Home
 │   │   │   │   └── Home.jsx
-│   │   │   ├── LogIn
+│   │   │   ├── 🔑 LogIn
 │   │   │   │   └── LogIn.jsx
-│   │   │   ├── RecipeInfo
+│   │   │   ├── 🍽️ RecipeInfo
 │   │   │   │   └── RecipeInfo.jsx
-│   │   │   ├── Recipes
+│   │   │   ├── 📖 Recipes
 │   │   │   │   └── Recipes.jsx
-│   │   │   ├── SignUp
+│   │   │   ├── 📝 SignUp
 │   │   │   │   └── SignUp.jsx
-│   │   │   ├── UserProfile
+│   │   │   ├── 👤 UserProfile
 │   │   │   │   └── UserProfile.jsx
-│   │   │   └── UserRecipes
+│   │   │   └── 👨‍🍳 UserRecipes
 │   │   │       └── UserRecipes.jsx
-│   │   └── routes.jsx
-│   ├── tailwind.config.js
-│   ├── vercel.json
-│   └── vite.config.js
-└── server
-    ├── Pipfile
-    ├── Pipfile.lock
-    ├── .gitignore
-    ├── app.py
-    ├── config.py
-    ├── db.json
-    ├── gunicorn_run.py
-    ├── instance
-    │   └── tastetribe.db
-    ├── migrations
-    │   ├── README
-    │   ├── alembic.ini
-    │   ├── env.py
-    │   ├── script.py.mako
-    │   └── versions
-    │       └── 1ded27d83174_initial_migration.py
-    ├── models.py
-    ├── requirements.txt
-    ├── routes
-    │   ├── admin.py
-    │   ├── auth.py
-    │   ├── bookmarks.py
-    │   ├── comments.py
-    │   ├── contact.py
-    │   ├── likes.py
-    │   ├── notifications.py
-    │   ├── ratings.py
-    │   ├── recipes.py
-    │   └── users.py
-    ├── schema
+│   │   └── 🛣️ routes.jsx
+│   ├── 🎨 tailwind.config.js
+│   ├── 🚀 vercel.json
+│   └── ⚙️ vite.config.js
+└── 🖥️ server
+    ├── 📄 Pipfile
+    ├── 🔒 Pipfile.lock
+    ├── 👁️ .gitignore
+    ├── 🚀 app.py
+    ├── ⚙️ config.py
+    ├── 🗃️ db.json
+    ├── 🦄 gunicorn_run.py
+    ├── 📁 instance
+    │   └── 🗄️ tastetribe.db
+    ├── 🔄 migrations
+    │   ├── 📚 README
+    │   ├── ⚙️ alembic.ini
+    │   ├── 🌿 env.py
+    │   ├── 📜 script.py.mako
+    │   └── 📂 versions
+    │       └── 🔢 1ded27d83174_initial_migration.py
+    ├── 🏗️ models.py
+    ├── 📋 requirements.txt
+    ├── 🛣️ routes
+    │   ├── 👑 admin.py
+    │   ├── 🔐 auth.py
+    │   ├── 🔖 bookmarks.py
+    │   ├── 💬 comments.py
+    │   ├── 📞 contact.py
+    │   ├── 👍 likes.py
+    │   ├── 🔔 notifications.py
+    │   ├── ⭐ ratings.py
+    │   ├── 🍽️ recipes.py
+    │   └── 👤 users.py
+    ├── 📐 schema
     │   └── schema.py
-    ├── secret.py
-    ├── seed.py
-    └── uploads
+    ├── 🔑 secret.py
+    └── 🌱 seed.py
+
 ```
+
 
 ## Features
 
@@ -166,7 +167,7 @@ TasteTribe_2.0
 
    ```sh
    git clone git@github.com:Nicolex0/TasteTribe_2.0.git
-   ```
+````
 
 2. Navigate to the project directory:
 
