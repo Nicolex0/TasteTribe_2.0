@@ -49,8 +49,8 @@ CORS(
     resources={
         r"/*": {
             "origins": [
-                "http://localhost:3001",
-                "https://taste-tribe-foodie-1.vercel.app",
+                "http://localhost:3000",
+                "https://taste-tribe-2-0-yvgd.vercel.app/",
                 "http://0.0.0.0:5000",
             ]
         }
