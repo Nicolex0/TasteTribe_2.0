@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://tastetribe-foodie.onrender.com"; // Adjust this to your backend URL
+const API_URL = "https://tastetribe-savor.onrender.com"; // Adjust this to your backend URL
 
 const api = axios.create({
   baseURL: API_URL,
